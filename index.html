@@ -1,0 +1,3915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Chalan Verification</title>
+
+<!-- Noto Sans Bengali ensures crisp Bengali conjuncts in browser, Print, and PDF capture -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Real PDF417 2D Barcode Encoder (with built-in pure-JS offline fallback) -->
+<script src="https://cdn.jsdelivr.net/npm/bwip-js@4.3.0/dist/bwip-js-min.js"></script>
+<!-- In-Place Sheet Capture & Direct QR/Barcode Stamped A4 PDF Export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<style type="text/css">
+/* ==========================================================================
+   1. ORIGINAL PORTAL BASE STYLES (EXACT LEGACY SPECIFICATION)
+   ========================================================================== */
+body, td, th {
+	font-family: 'SolaimanLipi', 'Noto Sans Bengali', Verdana, Arial, Helvetica, sans-serif;
+	font-size: 16px;
+	color: #000000;
+}
+
+body {
+	background: none repeat scroll 0 0 #C5D394;
+	margin: 2px 0 36px 0;
+	padding: 0;
+}
+
+body.mode-details {
+	background: #FFFFFF;
+	margin: 0;
+	padding: 0 0 36px 0;
+}
+
+body.mode-admin {
+	background: #EEF2E3;
+	margin: 0;
+	padding: 0 0 48px 0;
+}
+
+.table {
+	border-bottom-width: thin;
+	border-bottom-color: #999999;
+	border-bottom-style: solid;
+	border-top-width: thin;
+	border-top-color: #999999;
+	border-top-style: solid;
+	border-left-width: thin;
+	border-left-color: #999999;
+	border-left-style: solid;
+	border-right-width: thin;
+	border-right-color: #999999;
+	border-right-style: solid;
+	border-collapse: collapse;
+}
+
+.style1 {
+	font-size: 24px;
+}
+
+.style2 {
+	font-size: 24px;
+	font-family: Verdana, Arial, Helvetica, 'SolaimanLipi', 'Noto Sans Bengali', sans-serif;
+	font-weight: normal;
+	color: #000000;
+	line-height: 1.25;
+}
+
+/* ==========================================================================
+   2. EXACT USER-PROVIDED CALENDAR & DATE PICKER STYLESHEET (VERBATIM)
+   ========================================================================== */
+/**
+ This stylesheet is part of the java script calendar and date picker
+  **/
+#calender {
+	width: 200px;
+	font-family: ms sans serif, sans serif;
+	font-size: 7pt;
+	}
+
+#calenderTable {
+	border-style: outset;
+	border-width: 2px;
+	border-color: black;
+	background-color: #EEE;
+	display: none;
+	position: absolute;
+	z-index: 200;
+	top: 0px;
+	left: 0px;
+	}
+
+#calenderTableHead TR {
+	background-color: #5FB404;
+	}
+
+#calenderTableDays TR {
+	background-color: #B40404;
+	color: #E6E6E6;
+	}
+
+.normalDay {
+	border: 1px dotted black;
+	cursor: pointer;
+	}
+
+.hlDay {
+	border: 1px black;
+	background-color: #585858;
+	color: #E6E6E6;
+	cursor: pointer;
+	}
+
+.toDay {
+	border: 1px solid #E70;
+	background-color: #FD8;
+	color: #E70;
+	font-weight: bold;
+	cursor: pointer;
+	}
+
+.choosenDay {
+	border: 1px #000000;
+	background-color: #585858;
+	color: #E6E6E6;
+	font-weight: bold;
+	cursor: pointer;
+	}
+
+/* ==========================================================================
+   3. VIEW SWITCHING & INVISIBLE 16x16 FAR BOTTOM-RIGHT ADMIN TRIGGER
+   ========================================================================== */
+.app-view {
+	display: none;
+}
+
+.app-view.active-view {
+	display: block;
+}
+
+/* Completely invisible 16x16 hotspot in far bottom-right corner; expands on hover */
+.discreet-corner-trigger {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	width: 16px;
+	height: 16px;
+	z-index: 500;
+	overflow: hidden;
+	opacity: 0;
+	transition: opacity 0.18s ease;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+.discreet-corner-trigger:hover,
+.discreet-corner-trigger:focus-within {
+	width: auto;
+	height: auto;
+	right: 8px;
+	bottom: 8px;
+	opacity: 0.96;
+	overflow: visible;
+	background: rgba(34, 62, 16, 0.92);
+	color: #FFFFFF;
+	border-radius: 4px;
+	padding: 5px 10px;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 11px;
+	gap: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.24);
+}
+
+.discreet-corner-trigger a {
+	color: #E8F5D0;
+	text-decoration: none;
+	font-weight: 600;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.discreet-corner-trigger a:hover {
+	text-decoration: underline;
+	color: #FFFFFF;
+}
+
+/* ==========================================================================
+   4. VIEW 1: LEGACY MAIN VERIFICATION PORTAL (100% AUTHENTIC APPEARANCE)
+   ========================================================================== */
+.page-scroll-wrapper {
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+.main-layout-table {
+	width: 896px;
+	margin: 0 auto;
+	border: 0;
+	border-collapse: separate;
+	border-spacing: 0;
+	background-color: #FFFFFF;
+}
+
+.header-cell {
+	padding: 2px 4px 2px 5px;
+	text-align: center;
+	vertical-align: top;
+	line-height: 0;
+	user-select: none;
+}
+
+.header-banner-img {
+	display: block;
+	width: 897px;
+	height: 97px;
+	border: 0;
+}
+
+.header-banner-fallback {
+	display: none;
+	width: 897px;
+	height: 97px;
+	margin: 0 auto;
+}
+
+.side-bar-col {
+	width: 6px;
+	background-color: #D9E2BA;
+	padding: 0;
+}
+
+.center-content-col {
+	width: 884px;
+	vertical-align: top;
+	background-color: #FFFFFF;
+	padding: 4px 10px 10px 10px;
+}
+
+.section-heading-box {
+	text-align: center;
+	border-bottom: medium solid #999999;
+	padding-bottom: 3px;
+	margin-bottom: 14px;
+}
+
+.section-automated-wrap {
+	margin-top: 40px;
+}
+
+.chalan-form-table {
+	border: 0;
+	border-collapse: collapse;
+	margin-left: 16px;
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 11px;
+	color: #000000;
+}
+
+.chalan-form-table td {
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	padding: 3px 4px;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+.form-label-cell {
+	width: 86px;
+	text-align: left;
+	padding-right: 6px;
+}
+
+.classic-input {
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	background-color: #FFFFFF;
+	border: 1px solid #7F9DB9;
+	border-top-color: #7A7A7A;
+	border-left-color: #7A7A7A;
+	border-right-color: #CCCCCC;
+	border-bottom-color: #CCCCCC;
+	padding: 2px 3px;
+	height: 20px;
+	box-sizing: border-box;
+	border-radius: 0;
+	outline: none;
+}
+
+.classic-input:focus {
+	border-color: #4D90FE;
+}
+
+.classic-select {
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	background-color: #FFFFFF;
+	border: 1px solid #7F9DB9;
+	height: 21px;
+	padding: 0 2px;
+	border-radius: 0;
+}
+
+.classic-button {
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 11px;
+	color: #000000;
+	background-color: #ECE9D8;
+	background-image: linear-gradient(to bottom, #F8F8F8 0%, #E1E1E1 100%);
+	border: 1px solid #707070;
+	border-top-color: #A0A0A0;
+	border-left-color: #A0A0A0;
+	padding: 1px 8px;
+	height: 21px;
+	cursor: pointer;
+	border-radius: 0;
+	line-height: 16px;
+}
+
+.classic-button:hover {
+	background-image: linear-gradient(to bottom, #FFFFFF 0%, #E8E8E8 100%);
+	border-color: #3C7FB1;
+}
+
+.classic-button:active {
+	background-image: linear-gradient(to bottom, #DCDCDC 0%, #F0F0F0 100%);
+	padding-top: 2px;
+}
+
+.radio-group-inline {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.radio-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 3px;
+	cursor: pointer;
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 11px;
+}
+
+.radio-label input[type="radio"] {
+	margin: 0;
+	padding: 0;
+	cursor: pointer;
+	width: 12px;
+	height: 12px;
+}
+
+.print-action-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	color: #000000;
+	text-decoration: none;
+	font-family: Arial, Helvetica, Verdana, sans-serif;
+	font-size: 11px;
+	cursor: pointer;
+	background: transparent;
+	border: 0;
+	padding: 2px 4px;
+}
+
+.print-action-link:hover {
+	text-decoration: underline;
+}
+
+/* Aligned Print button columns across Manual & Automated rows */
+.print-col-manual {
+	padding-left: 170px !important;
+}
+
+.print-col-auto {
+	padding-left: 136px !important;
+}
+
+/* Authentic inset bordered result frame below Automated Chalan Verification */
+.auto-result-inset-frame {
+	margin: 12px 4px 0 12px;
+	min-height: 290px;
+	border-top: 2px solid #9E9E9E;
+	border-left: 2px solid #9E9E9E;
+	border-right: 1px solid #E0E0E0;
+	border-bottom: 1px solid #E0E0E0;
+	background-color: #FFFFFF;
+	padding: 10px 12px;
+	box-sizing: border-box;
+}
+
+.inline-msg-box {
+	margin: 8px 16px 4px 16px;
+	padding: 8px 12px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	border: 1px solid #C87B7B;
+	background-color: #FFF4F4;
+	color: #8B0000;
+	max-width: 760px;
+}
+
+.auto-result-inset-frame .inline-msg-box {
+	margin: 0;
+}
+
+/* Calendar internal controls keeping exact compact 7pt aesthetic */
+#calenderTable select {
+	font-family: 'MS Sans Serif', Arial, sans-serif;
+	font-size: 7.5pt;
+	height: 18px;
+	padding: 0;
+	border: 1px solid #666666;
+	background-color: #FFFFFF;
+}
+
+#calenderTable td {
+	font-family: 'MS Sans Serif', Arial, sans-serif;
+	font-size: 7.5pt;
+	text-align: center;
+	padding: 2px 3px;
+}
+
+#calenderTableHead td {
+	padding: 2px;
+}
+
+.cal-close-btn {
+	display: inline-block;
+	padding: 0 4px;
+	background-color: #E6E6E6;
+	border: 1px outset #FFFFFF;
+	color: #000000;
+	font-weight: bold;
+	text-decoration: none;
+	font-size: 7.5pt;
+	line-height: 14px;
+	cursor: pointer;
+}
+
+/* ==========================================================================
+   5. VIEW 2: OFFICIAL 3-COPY T.R. FORM NO. 6 (4) DETAILS & PRINT RECEIPT
+      (PURE WHITE PAGE — ONLY CENTERED PRINT & DOWNLOAD BUTTONS ABOVE SHEET)
+   ========================================================================== */
+.details-action-bar {
+	width: 760px;
+	max-width: 100%;
+	margin: 14px auto 8px auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+}
+
+.circle-icon-btn {
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	background-color: #FFFFFF;
+	border: 1px solid #D8D8D8;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.14);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	color: #111111;
+	transition: transform 0.12s ease, box-shadow 0.12s ease, background-color 0.12s ease;
+	padding: 0;
+}
+
+.circle-icon-btn:hover {
+	background-color: #F6F6F6;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.22);
+	transform: translateY(-1px);
+}
+
+.circle-icon-btn:active {
+	transform: translateY(0);
+}
+
+.circle-icon-btn:disabled {
+	opacity: 0.5;
+	cursor: wait;
+}
+
+.chalan-sheet-wrapper {
+	width: 100%;
+	overflow-x: auto;
+	-webkit-overflow-scrolling: touch;
+}
+
+/* Strict fixed 760px width for pixel-accurate A4 fit with ZERO right clipping */
+#chalanSheet {
+	width: 760px;
+	max-width: 760px;
+	margin: 0 auto;
+	padding: 8px 12px;
+	box-sizing: border-box;
+	background-color: #FFFFFF;
+	color: #000000;
+	font-family: 'SolaimanLipi', 'Noto Sans Bengali', 'Kalpurush', Arial, sans-serif;
+	letter-spacing: 0;
+	font-kerning: none;
+	line-height: 1.28;
+}
+
+.chalan-copy-block {
+	width: 100%;
+	box-sizing: border-box;
+	page-break-inside: avoid;
+	break-inside: avoid;
+}
+
+.chalan-cut-divider {
+	border: 0;
+	border-bottom: 1px dashed #444444;
+	margin: 5px 0 6px 0;
+}
+
+/* Exact Demo 3-Column Header inside each Chalan Copy */
+.copy-header-table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+	border: 0;
+	min-height: 0;
+	padding: 0;
+	margin-bottom: 2px;
+}
+
+.copy-header-table td {
+	vertical-align: top;
+	padding: 0;
+	border: 0;
+	color: #000000;
+	font-family: 'SolaimanLipi', 'Noto Sans Bengali', 'Kalpurush', Arial, sans-serif;
+	letter-spacing: 0;
+}
+
+.copy-header-left {
+	width: 25%;
+	text-align: left;
+	padding-right: 6px;
+}
+
+.copy-title-text {
+	font-size: 9.8px;
+	font-weight: 400;
+	line-height: 1.3;
+	margin-bottom: 5px;
+}
+
+.copy-tr-text {
+	font-size: 8.5px;
+	line-height: 1.28;
+	font-weight: 400;
+}
+
+.copy-header-center {
+	width: 50%;
+	text-align: center;
+	vertical-align: top !important;
+}
+
+.copy-header-center-inner {
+	min-height: 66px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.copy-form-heading {
+	font-size: 15.5px;
+	font-weight: 700;
+	line-height: 1.15;
+	margin: 0;
+	padding-top: 1px;
+}
+
+.copy-bank-line {
+	font-size: 10.2px;
+	font-weight: 400;
+	line-height: 1.22;
+	margin-bottom: 3px;
+	white-space: nowrap;
+}
+
+.copy-header-right {
+	width: 25%;
+	text-align: right;
+	vertical-align: top !important;
+}
+
+.qr-wrap-inline {
+	display: inline-block;
+	text-align: center;
+	line-height: 1;
+}
+
+/* Exact Demo Landscape Rich Aqua-Cyan QR Box (78px x 55px, completely unresponsive) */
+.qr-cyan-box {
+	background-color: #54F6FF;
+	padding: 0;
+	width: 78px;
+	height: 55px;
+	display: block;
+	margin: 0 auto;
+	line-height: 0;
+	border: 0;
+	box-sizing: border-box;
+	overflow: hidden;
+	-webkit-print-color-adjust: exact;
+	print-color-adjust: exact;
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-user-drag: none;
+	cursor: default;
+}
+
+.qr-img {
+	display: block;
+	width: 78px;
+	height: 55px;
+	object-fit: fill;
+	image-rendering: pixelated;
+	border: 0;
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-user-drag: none;
+	cursor: default;
+}
+
+.qr-caption-text {
+	font-size: 6.8px;
+	font-weight: 400;
+	line-height: 1.15;
+	margin-top: 2px;
+	text-align: center;
+	color: #000000;
+	white-space: nowrap;
+}
+
+/* Exact Demo 6-Column T.R. Form Table (14.5% | 24.5% | 24.5% | 12% | 14% | 10.5%) */
+.tr-main-table {
+	width: 100%;
+	border-collapse: collapse;
+	border: 1px solid #333333;
+	table-layout: fixed;
+	font-size: 9px;
+	line-height: 1.3;
+	font-family: 'SolaimanLipi', 'Noto Sans Bengali', 'Kalpurush', Arial, sans-serif;
+	letter-spacing: 0;
+}
+
+.tr-main-table th {
+	border: 1px solid #333333;
+	text-align: center;
+	vertical-align: middle;
+	font-weight: 400;
+	font-size: 9px;
+	padding: 3px 4px;
+	background-color: #FFFFFF;
+	color: #000000;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	font-family: 'SolaimanLipi', 'Noto Sans Bengali', 'Kalpurush', Arial, sans-serif;
+	letter-spacing: 0;
+}
+
+.tr-main-table td {
+	border: 1px solid #333333;
+	vertical-align: top;
+	padding: 4px 4px;
+	font-weight: 400;
+	font-size: 9px;
+	color: #000000;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	font-family: 'SolaimanLipi', 'Noto Sans Bengali', 'Kalpurush', Arial, sans-serif;
+	letter-spacing: 0;
+}
+
+.tr-body-cell-inner {
+	min-height: 52px;
+}
+
+.tr-amount-cell {
+	text-align: right;
+	font-weight: 400;
+	white-space: nowrap;
+	padding-right: 5px !important;
+}
+
+/* Exact Demo Footer Row Below Table */
+.copy-footer-table {
+	width: 100%;
+	border-collapse: collapse;
+	table-layout: fixed;
+	border: 0;
+	margin-top: 3px;
+}
+
+.copy-footer-table td {
+	border: 0;
+	padding: 0;
+	vertical-align: top;
+	color: #000000;
+	font-family: 'SolaimanLipi', 'Noto Sans Bengali', 'Kalpurush', Arial, sans-serif;
+	letter-spacing: 0;
+}
+
+.copy-footer-left {
+	width: 65%;
+	padding-right: 8px;
+	text-align: left;
+}
+
+.copy-code-remarks {
+	font-size: 8.8px;
+	font-weight: 400;
+	line-height: 1.38;
+	margin-bottom: 4px;
+	word-wrap: break-word;
+}
+
+.pdf417-holder {
+	display: inline-block;
+	cursor: default;
+	line-height: 0;
+	margin-top: 3px;
+	margin-left: 24px;
+	max-width: calc(100% - 24px);
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-user-drag: none;
+}
+
+.barcode-img {
+	display: block;
+	width: 282px;
+	height: 29px;
+	object-fit: fill;
+	max-width: 100%;
+	image-rendering: pixelated;
+	border: 0;
+	pointer-events: none;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-user-drag: none;
+	cursor: default;
+}
+
+.copy-footer-right {
+	width: 35%;
+	text-align: right;
+	font-size: 8.8px;
+	font-weight: 400;
+	line-height: 1.38;
+}
+
+.copy-total-line {
+	font-weight: 700;
+	font-size: 9px;
+}
+
+.copy-date-line {
+	margin-top: 8px;
+}
+
+.copy-sys-note {
+	font-size: 8.4px;
+	margin-top: 1px;
+}
+
+/* Not-found State inside Details View */
+.details-not-found {
+	max-width: 560px;
+	margin: 48px auto;
+	padding: 24px;
+	border: 1px solid #D3C0C0;
+	background-color: #FFF7F7;
+	text-align: center;
+	font-family: Verdana, Arial, sans-serif;
+	border-radius: 6px;
+}
+
+/* ==========================================================================
+   6. VIEW 3: ADMIN / MANUAL CHALAN ENTRY & MANAGER SUB-PAGE (?view=admin)
+   ========================================================================== */
+.admin-shell {
+	max-width: 1080px;
+	margin: 0 auto;
+	padding: 16px;
+	box-sizing: border-box;
+	font-family: Verdana, Arial, 'Noto Sans Bengali', 'SolaimanLipi', sans-serif;
+}
+
+.admin-header-bar {
+	background: linear-gradient(to bottom, #6E9E3D, #4B7A26);
+	color: #FFFFFF;
+	padding: 14px 20px;
+	border-radius: 6px;
+	border-bottom: 4px solid #632F1D;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 18px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.admin-header-title h1 {
+	margin: 0;
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.admin-header-title p {
+	margin: 3px 0 0 0;
+	font-size: 11.5px;
+	opacity: 0.92;
+}
+
+.admin-header-actions {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.admin-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 5px;
+	padding: 7px 12px;
+	border-radius: 4px;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 12px;
+	font-weight: 600;
+	cursor: pointer;
+	border: 1px solid transparent;
+	text-decoration: none;
+	transition: background-color 0.15s ease, opacity 0.15s ease;
+}
+
+.admin-btn-light {
+	background-color: #FFFFFF;
+	color: #2A4B14;
+	border-color: #D2E0B8;
+}
+
+.admin-btn-light:hover {
+	background-color: #F3F8EA;
+}
+
+.admin-btn-primary {
+	background-color: #3E7322;
+	color: #FFFFFF;
+	border-color: #2E5A17;
+}
+
+.admin-btn-primary:hover {
+	background-color: #32601A;
+}
+
+.admin-btn-accent {
+	background-color: #0E6BA8;
+	color: #FFFFFF;
+	border-color: #0A5385;
+}
+
+.admin-btn-accent:hover {
+	background-color: #0B588C;
+}
+
+.admin-btn-secondary {
+	background-color: #F2F4EE;
+	color: #222222;
+	border-color: #BFC9AF;
+}
+
+.admin-btn-secondary:hover {
+	background-color: #E4E9DC;
+}
+
+.admin-btn-danger {
+	background-color: #C62828;
+	color: #FFFFFF;
+	border-color: #A01E1E;
+}
+
+.admin-btn-danger:hover {
+	background-color: #A91E1E;
+}
+
+.admin-btn-sm {
+	padding: 4px 8px;
+	font-size: 11px;
+}
+
+.admin-card {
+	background-color: #FFFFFF;
+	border: 1px solid #C8D4B4;
+	border-radius: 6px;
+	padding: 18px 20px;
+	margin-bottom: 18px;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.admin-card-title {
+	margin: 0 0 14px 0;
+	padding-bottom: 8px;
+	border-bottom: 2px solid #D9E2BA;
+	font-size: 15px;
+	font-weight: 700;
+	color: #234210;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.admin-form-grid {
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+	gap: 12px 14px;
+}
+
+.col-12 { grid-column: span 12; }
+.col-8  { grid-column: span 8; }
+.col-6  { grid-column: span 6; }
+.col-4  { grid-column: span 4; }
+.col-3  { grid-column: span 3; }
+
+@media (max-width: 768px) {
+	.col-8, .col-6, .col-4, .col-3 {
+		grid-column: span 12;
+	}
+}
+
+.admin-field label {
+	display: block;
+	font-size: 11.5px;
+	font-weight: 700;
+	color: #2D3D20;
+	margin-bottom: 4px;
+}
+
+.admin-field .label-bn {
+	font-weight: 400;
+	color: #556648;
+	font-size: 11.5px;
+}
+
+.admin-input,
+.admin-select,
+.admin-textarea {
+	width: 100%;
+	box-sizing: border-box;
+	padding: 7px 9px;
+	border: 1px solid #B5C2A0;
+	border-radius: 4px;
+	font-family: 'Noto Sans Bengali', 'SolaimanLipi', Verdana, Arial, sans-serif;
+	font-size: 13px;
+	color: #111111;
+	background-color: #FFFFFF;
+}
+
+.admin-input:focus,
+.admin-select:focus,
+.admin-textarea:focus {
+	outline: none;
+	border-color: #4B7A26;
+	box-shadow: 0 0 0 2px rgba(75, 122, 38, 0.15);
+}
+
+.admin-textarea {
+	resize: vertical;
+	min-height: 60px;
+}
+
+.admin-help {
+	font-size: 10.5px;
+	color: #607052;
+	margin-top: 3px;
+}
+
+.inline-input-group {
+	display: flex;
+	gap: 6px;
+	align-items: stretch;
+}
+
+.inline-input-group .admin-input {
+	flex: 1;
+}
+
+.admin-form-footer {
+	margin-top: 16px;
+	padding-top: 14px;
+	border-top: 1px solid #E3EAD6;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	align-items: center;
+}
+
+.admin-table-wrap {
+	width: 100%;
+	overflow-x: auto;
+}
+
+.admin-data-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 12.5px;
+}
+
+.admin-data-table th {
+	background-color: #E7EFD7;
+	color: #1E380E;
+	font-weight: 700;
+	text-align: left;
+	padding: 8px 10px;
+	border: 1px solid #C5D3AD;
+	white-space: nowrap;
+}
+
+.admin-data-table td {
+	padding: 8px 10px;
+	border: 1px solid #D8E2C6;
+	vertical-align: middle;
+}
+
+.admin-data-table tr:nth-child(even) td {
+	background-color: #FAFDF6;
+}
+
+.admin-toast {
+	display: none;
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	background-color: #264D14;
+	color: #FFFFFF;
+	padding: 10px 16px;
+	border-radius: 5px;
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+	z-index: 10000;
+}
+
+.admin-toast.show {
+	display: block;
+}
+
+/* ==========================================================================
+   7. CLASSIC DIALOG MODAL (NO window.alert / confirm)
+   ========================================================================== */
+.classic-modal-overlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.35);
+	z-index: 9999;
+	align-items: center;
+	justify-content: center;
+	padding: 12px;
+	box-sizing: border-box;
+}
+
+.classic-modal-overlay.is-open {
+	display: flex;
+}
+
+.classic-dialog-box {
+	width: 340px;
+	max-width: 92vw;
+	background-color: #ECE9D8;
+	border-top: 2px solid #FFFFFF;
+	border-left: 2px solid #FFFFFF;
+	border-right: 2px solid #404040;
+	border-bottom: 2px solid #404040;
+	font-family: Tahoma, Arial, Verdana, sans-serif;
+	font-size: 12px;
+	color: #000000;
+}
+
+.classic-dialog-titlebar {
+	background: linear-gradient(to right, #0A246A, #A6CAF0);
+	color: #FFFFFF;
+	font-weight: bold;
+	font-size: 11px;
+	padding: 4px 6px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.classic-dialog-close-x {
+	background-color: #ECE9D8;
+	color: #000000;
+	border: 1px outset #FFFFFF;
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	width: 16px;
+	height: 15px;
+	line-height: 12px;
+	text-align: center;
+	cursor: pointer;
+	padding: 0;
+}
+
+.classic-dialog-body {
+	padding: 16px 14px 12px 14px;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-size: 12px;
+	word-break: break-word;
+}
+
+.classic-dialog-footer {
+	padding: 4px 14px 12px 14px;
+	text-align: center;
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+}
+
+.classic-dialog-ok {
+	min-width: 72px;
+	height: 23px;
+	font-family: Tahoma, Arial, sans-serif;
+	font-size: 11px;
+	background-color: #ECE9D8;
+	border-top: 1px solid #FFFFFF;
+	border-left: 1px solid #FFFFFF;
+	border-right: 1px solid #404040;
+	border-bottom: 1px solid #404040;
+	cursor: pointer;
+}
+
+/* ==========================================================================
+   8. PRINT STYLESHEET (1-PAGE A4 3-COPY OFFICIAL RECEIPT WITH 74x52 QR)
+   ========================================================================== */
+@page {
+	size: A4 portrait;
+	margin: 6mm;
+}
+
+@media print {
+	html, body {
+		background: #FFFFFF !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		-webkit-print-color-adjust: exact !important;
+		print-color-adjust: exact !important;
+	}
+	.no-print,
+	.side-bar-col,
+	.print-action-link,
+	.details-action-bar,
+	.discreet-corner-trigger,
+	#calenderTable,
+	.classic-modal-overlay,
+	.admin-toast {
+		display: none !important;
+	}
+	.main-layout-table {
+		width: 100% !important;
+	}
+	.center-content-col {
+		width: 100% !important;
+		padding: 0 !important;
+	}
+	#chalanSheet {
+		width: 100% !important;
+		max-width: 100% !important;
+		padding: 0 !important;
+		margin: 0 !important;
+	}
+	.qr-cyan-box {
+		background-color: #54F6FF !important;
+		width: 78px !important;
+		height: 55px !important;
+		-webkit-print-color-adjust: exact !important;
+		print-color-adjust: exact !important;
+	}
+	.qr-img {
+		width: 78px !important;
+		height: 55px !important;
+		object-fit: fill !important;
+	}
+	.chalan-cut-divider {
+		margin: 5px 0 6px 0 !important;
+	}
+}
+</style>
+</head>
+<body>
+
+<!-- ========================================================================
+     VIEW 1: MAIN ONLINE CHALAN VERIFICATION PORTAL (DEFAULT / ?challanNo=...)
+     ======================================================================== -->
+<div id="view-verify" class="app-view active-view">
+	<div class="page-scroll-wrapper">
+		<table class="main-layout-table" width="896" border="0" align="center" bgcolor="#FFFFFF" cellpadding="0" cellspacing="0">
+			<!-- Official Header Banner (double-click discreetly opens Admin) -->
+			<tr>
+				<td colspan="3" class="header-cell" ondblclick="navigateTo('admin')">
+					<img
+						id="headerBannerImg"
+						class="header-banner-img"
+						src="https://challanverification.finance.gov.bd/echalan/images/header.jpg"
+						width="897"
+						height="97"
+						alt="Government of the People's Republic of Bangladesh - Office of the Controller General of Accounts"
+						onerror="showHeaderFallback()"
+					>
+					<!-- Automatic Inline SVG Fallback Matching Exact 897x97 Official CGA Banner -->
+					<div id="headerBannerFallback" class="header-banner-fallback">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 897 97" width="897" height="97" role="img" aria-label="Office of the Controller General of Accounts Header">
+							<defs>
+								<linearGradient id="cgaOliveGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+									<stop offset="0%" stop-color="#6E9E3D"/>
+									<stop offset="55%" stop-color="#5B8C2F"/>
+									<stop offset="100%" stop-color="#487522"/>
+								</linearGradient>
+								<linearGradient id="cgaHighlight" x1="0%" y1="0%" x2="100%" y2="0%">
+									<stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.14"/>
+									<stop offset="45%" stop-color="#FFFFFF" stop-opacity="0.06"/>
+									<stop offset="100%" stop-color="#000000" stop-opacity="0.12"/>
+								</linearGradient>
+							</defs>
+							<rect x="0" y="0" width="897" height="92" fill="url(#cgaOliveGrad)"/>
+							<rect x="0" y="0" width="897" height="92" fill="url(#cgaHighlight)"/>
+							<rect x="0" y="92" width="897" height="5" fill="#6E2D1D"/>
+							<!-- Bangladesh Government Seal (Left) -->
+							<g transform="translate(52, 46)">
+								<circle cx="0" cy="0" r="37" fill="#FFFFFF" stroke="#006A4E" stroke-width="2.5"/>
+								<circle cx="0" cy="0" r="31" fill="none" stroke="#006A4E" stroke-width="1.2" stroke-dasharray="2.5 1.8"/>
+								<circle cx="0" cy="0" r="24" fill="#D92027" stroke="#F4C430" stroke-width="1.8"/>
+								<!-- Stylized Golden Map of Bangladesh -->
+								<path d="M-4,-14 L2,-12 L6,-6 L10,-4 L8,2 L11,7 L6,12 L4,17 L1,14 L2,8 L-3,11 L-7,9 L-6,3 L-10,0 L-7,-5 L-9,-10 Z" fill="#F4C430" stroke="#A67C00" stroke-width="0.6"/>
+								<!-- 4 Stars around emblem -->
+								<circle cx="-18" cy="-16" r="1.8" fill="#006A4E"/>
+								<circle cx="18" cy="-16" r="1.8" fill="#006A4E"/>
+								<circle cx="-18" cy="16" r="1.8" fill="#006A4E"/>
+								<circle cx="18" cy="16" r="1.8" fill="#006A4E"/>
+							</g>
+							<!-- Official Header Text -->
+							<text x="108" y="34" fill="#F1F7E7" font-family="Verdana, Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold">Government of the People's Republic of Bangladesh</text>
+							<text x="108" y="61" fill="#FFFFFF" font-family="Verdana, Arial, Helvetica, sans-serif" font-size="21" font-weight="bold">Office of the Controller General of Accounts</text>
+							<!-- Bangladesh National Flag (Right) -->
+							<g transform="translate(744, 10)">
+								<rect x="0" y="0" width="132" height="74" fill="#006A4E" stroke="#355E22" stroke-width="1"/>
+								<circle cx="59" cy="37" r="23" fill="#F42A41"/>
+							</g>
+						</svg>
+					</div>
+				</td>
+			</tr>
+
+			<!-- Main Body Row with Thin Olive Sidebars -->
+			<tr>
+				<td class="side-bar-col">&nbsp;</td>
+				<td class="center-content-col">
+					<!-- SECTION 1: ONLINE CHALAN VERIFICATION -->
+					<div class="section-heading-box">
+						<span class="style2">Online Chalan Verification</span>
+					</div>
+
+					<table class="chalan-form-table" border="0" cellpadding="2" cellspacing="0">
+						<tr>
+							<td class="form-label-cell">Chalan Date</td>
+							<td colspan="2">
+								<input
+									type="text"
+									id="txtChalanDate"
+									name="txtChalanDate"
+									class="classic-input"
+									style="width: 96px;"
+									autocomplete="off"
+									onclick="showCalender(this, event)"
+									onfocus="showCalender(this, event)"
+								>
+							</td>
+						</tr>
+						<tr>
+							<td class="form-label-cell">Deposited in</td>
+							<td colspan="2">
+								<div class="radio-group-inline">
+									<label class="radio-label">
+										<input type="radio" name="rdoDepositedIn" value="Cash" checked="checked" onchange="listBankBranch()"> Cash
+									</label>
+									<label class="radio-label">
+										<input type="radio" name="rdoDepositedIn" value="Cheque" onchange="listBankBranch()"> Cheque
+									</label>
+									<label class="radio-label">
+										<input type="radio" name="rdoDepositedIn" value="Transfer" onchange="listBankBranch()"> Transfer
+									</label>
+									<label class="radio-label">
+										<input type="radio" name="rdoDepositedIn" value="e-Payment" onchange="listBankBranch()"> e-Payment
+									</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td class="form-label-cell">Bank</td>
+							<td colspan="2">
+								<!-- Strictly ONLY 2 Banks: Bangladesh Bank (default) & Sonali Bank -->
+								<select id="cboBank" name="cboBank" class="classic-select" style="width: 148px;" onchange="listBankBranch()">
+									<option value="1" selected="selected">Bangladesh Bank</option>
+									<option value="2">Sonali Bank</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="form-label-cell">Branch</td>
+							<td colspan="2">
+								<span id="dvBankBranch">
+									<select id="cboBankBranch" name="cboBankBranch" class="classic-select" style="width: 148px;">
+										<option value="BB - Barishal">BB - Barishal</option>
+									</select>
+								</span>
+							</td>
+						</tr>
+						<tr>
+							<td class="form-label-cell">Chalan No</td>
+							<td>
+								<input
+									type="text"
+									id="txtChalanNo"
+									name="txtChalanNo"
+									class="classic-input"
+									style="width: 96px;"
+									onkeydown="if(event.key==='Enter'){verifyChalan();}"
+								>
+								<input
+									type="button"
+									id="btnVerifyManual"
+									class="classic-button"
+									value="Verify"
+									onclick="verifyChalan()"
+								>
+							</td>
+							<td class="print-col-manual">
+								<button type="button" class="print-action-link" onclick="window.print()">
+									<svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+										<rect x="3.5" y="1.5" width="9" height="4" fill="#FFFFFF" stroke="#5A7696" stroke-width="1"/>
+										<rect x="1.5" y="5" width="13" height="6" rx="1" fill="#C9D8E8" stroke="#5A7696" stroke-width="1"/>
+										<rect x="4" y="8.5" width="8" height="6" fill="#FFFFFF" stroke="#5A7696" stroke-width="1"/>
+										<line x1="5.5" y1="10.5" x2="10.5" y2="10.5" stroke="#6B8299" stroke-width="1"/>
+										<line x1="5.5" y1="12.5" x2="9.5" y2="12.5" stroke="#6B8299" stroke-width="1"/>
+									</svg>
+									<span>Print</span>
+								</button>
+							</td>
+						</tr>
+					</table>
+
+					<div id="dvManualResult"></div>
+
+					<!-- SECTION 2: AUTOMATED CHALAN VERIFICATION -->
+					<div class="section-automated-wrap">
+						<div class="section-heading-box">
+							<span class="style2">Automated Chalan Verification (স্বয়ংক্রিয় চালান যাচাই)</span>
+						</div>
+
+						<table class="chalan-form-table" border="0" cellpadding="2" cellspacing="0">
+							<tr>
+								<td class="form-label-cell">Chalan No</td>
+								<td>
+									<input
+										type="text"
+										id="txtAutoPrefix"
+										name="txtAutoPrefix"
+										class="classic-input"
+										style="width: 38px; text-align: center;"
+										maxlength="6"
+										value=""
+										onkeydown="if(event.key==='Enter'){verifyAutoChalan();}"
+									>
+									-
+									<input
+										type="text"
+										id="txtAutoChalanNo"
+										name="txtAutoChalanNo"
+										class="classic-input"
+										style="width: 105px;"
+										maxlength="18"
+										value=""
+										onkeydown="if(event.key==='Enter'){verifyAutoChalan();}"
+									>
+									-
+									<input
+										type="button"
+										id="btnVerifyAuto"
+										class="classic-button"
+										value="Verify"
+										onclick="verifyAutoChalan()"
+									>
+								</td>
+								<td class="print-col-auto">
+									<button type="button" class="print-action-link" onclick="window.print()">
+										<svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+											<rect x="3.5" y="1.5" width="9" height="4" fill="#FFFFFF" stroke="#5A7696" stroke-width="1"/>
+											<rect x="1.5" y="5" width="13" height="6" rx="1" fill="#C9D8E8" stroke="#5A7696" stroke-width="1"/>
+											<rect x="4" y="8.5" width="8" height="6" fill="#FFFFFF" stroke="#5A7696" stroke-width="1"/>
+											<line x1="5.5" y1="10.5" x2="10.5" y2="10.5" stroke="#6B8299" stroke-width="1"/>
+											<line x1="5.5" y1="12.5" x2="9.5" y2="12.5" stroke="#6B8299" stroke-width="1"/>
+										</svg>
+										<span>Print</span>
+									</button>
+								</td>
+							</tr>
+						</table>
+
+						<!-- Authentic Empty White Inset-Bordered Result Container (#dvResult) -->
+						<div id="dvResult" class="auto-result-inset-frame"></div>
+					</div>
+				</td>
+				<td class="side-bar-col">&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="3" style="height: 12px;">&nbsp;</td>
+			</tr>
+		</table>
+	</div>
+</div>
+
+<!-- ========================================================================
+     VIEW 2: OFFICIAL 3-COPY T.R. FORM NO. 6 (4) DETAILS & PRINTABLE RECEIPT
+     (PURE WHITE PAGE — ONLY PRINT & DOWNLOAD CIRCULAR BUTTONS ABOVE SHEET)
+     ======================================================================== -->
+<div id="view-details" class="app-view">
+	<div id="detailsActionBar" class="details-action-bar no-print">
+		<button type="button" class="circle-icon-btn" title="Print Chalan" aria-label="Print Chalan" onclick="window.print()">
+			<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+				<path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+			</svg>
+		</button>
+		<button type="button" id="btnDownloadPdf" class="circle-icon-btn" title="Download PDF" aria-label="Download PDF" onclick="downloadChalanPDF()">
+			<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+				<path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+			</svg>
+		</button>
+	</div>
+
+	<div class="chalan-sheet-wrapper">
+		<div id="chalanSheet"></div>
+	</div>
+</div>
+
+<!-- ========================================================================
+     VIEW 3: ADMIN / MANUAL CHALAN ENTRY & MANAGER SUB-PAGE (?view=admin)
+     ======================================================================== -->
+<div id="view-admin" class="app-view">
+	<div class="admin-shell">
+		<div class="admin-header-bar">
+			<div class="admin-header-title">
+				<h1>Chalan Entry &amp; Management Console</h1>
+				<p>Add, edit, duplicate, or manage verified chalan records stored locally in your browser.</p>
+			</div>
+			<div class="admin-header-actions">
+				<button type="button" class="admin-btn admin-btn-light" onclick="navigateTo('verify')">&larr; Back to Verification Portal</button>
+				<button type="button" class="admin-btn admin-btn-accent" onclick="previewSelectedAdminChalan()">View Chalan</button>
+				<button type="button" class="admin-btn admin-btn-secondary" onclick="previewSelectedAdminQrFlow()">Test QR Auto-Fill</button>
+			</div>
+		</div>
+
+		<!-- QR Base URL Configuration Card -->
+		<div class="admin-card">
+			<div class="admin-card-title">
+				<span>QR Code Destination URL Settings</span>
+				<span style="font-size: 11px; font-weight: 400; color: #51663F;">Encodes Main Portal URL (?challanNo=...) matching official flow</span>
+			</div>
+			<div class="admin-form-grid">
+				<div class="admin-field col-8">
+					<label for="admQrBaseUrl">Custom QR Verification Base URL (Optional)</label>
+					<input
+						type="text"
+						id="admQrBaseUrl"
+						class="admin-input"
+						placeholder="Leave blank to auto-detect current website URL (e.g., https://yourdomain.com/index.php)"
+						oninput="updateQrUrlHint()"
+					>
+					<div id="qrBaseUrlPreviewHint" class="admin-help"></div>
+				</div>
+				<div class="admin-field col-4" style="display:flex; align-items:flex-end; gap:8px;">
+					<button type="button" class="admin-btn admin-btn-primary" onclick="saveQrBaseUrlSetting()">Save URL</button>
+					<button type="button" class="admin-btn admin-btn-secondary" onclick="resetQrBaseUrlSetting()">Auto-Detect</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- Add / Edit Chalan Record Card -->
+		<div class="admin-card">
+			<div class="admin-card-title">
+				<span id="adminFormHeading">Add New Chalan Record (নতুন চালান যুক্ত করুন)</span>
+				<div style="display:flex; gap:8px; align-items:center;">
+					<span id="adminEditBadge" style="display:none; background:#E6F2D9; color:#2B5412; border:1px solid #B5D197; padding:3px 8px; border-radius:4px; font-size:11px;">Editing Existing</span>
+					<button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" onclick="loadDemoSampleIntoForm(false)">Load Sample</button>
+					<button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" onclick="resetAdminForm()">+ Clear / New</button>
+				</div>
+			</div>
+
+			<input type="hidden" id="admEditingOriginalNo" value="">
+
+			<div class="admin-form-grid">
+				<div class="admin-field col-3">
+					<label for="admPrefix">Chalan Prefix <span class="label-bn">(যেমন: 2627)</span></label>
+					<input type="text" id="admPrefix" class="admin-input" placeholder="2627" oninput="syncChalanNoBengali()">
+				</div>
+				<div class="admin-field col-4">
+					<label for="admSerial">Chalan Serial No <span class="label-bn">(যেমন: 0009880470)</span></label>
+					<input type="text" id="admSerial" class="admin-input" placeholder="0009880470" oninput="syncChalanNoBengali()">
+				</div>
+				<div class="admin-field col-5" style="grid-column: span 5;">
+					<label for="admChalanNoBn">Displayed Chalan No (Bengali) <span class="label-bn">(চালান নং)</span></label>
+					<input type="text" id="admChalanNoBn" class="admin-input" placeholder="২৬২৭-০০০৯৮৮০৪৭০১">
+				</div>
+
+				<div class="admin-field col-3">
+					<label for="admDepositMode">Deposited In</label>
+					<select id="admDepositMode" class="admin-select" onchange="syncAdminBankBranches()">
+						<option value="Cash">Cash</option>
+						<option value="Cheque">Cheque</option>
+						<option value="Transfer">Transfer</option>
+						<option value="e-Payment">e-Payment</option>
+					</select>
+				</div>
+				<div class="admin-field col-3">
+					<label for="admBankName">Bank (Strictly 2 Options)</label>
+					<select id="admBankName" class="admin-select" onchange="syncAdminBankBranches()">
+						<option value="Bangladesh Bank">Bangladesh Bank</option>
+						<option value="Sonali Bank">Sonali Bank</option>
+					</select>
+				</div>
+				<div class="admin-field col-3">
+					<label for="admBranchName">Branch</label>
+					<select id="admBranchName" class="admin-select"></select>
+					<div id="admBranchHint" class="admin-help"></div>
+				</div>
+				<div class="admin-field col-3">
+					<label for="admDatePicker">Deposit Date</label>
+					<input type="date" id="admDatePicker" class="admin-input" onchange="syncDateBengali()">
+				</div>
+
+				<div class="admin-field col-4">
+					<label for="admDateBn">Date Display (Bengali) <span class="label-bn">(তারিখ)</span></label>
+					<input type="text" id="admDateBn" class="admin-input" placeholder="১১/০৮/২০২৬ খ্রি.">
+				</div>
+				<div class="admin-field col-8">
+					<label for="admBankHeaderLine">Bank Header Line <span class="label-bn">(শাখায় টাকা জমা দেওয়ার চালান)</span></label>
+					<input type="text" id="admBankHeaderLine" class="admin-input" placeholder="সোনালী ব্যাংক পিএলসি, স্থানীয় কার্যালয়, ঢাকা শাখায় টাকা জমা দেওয়ার চালান">
+				</div>
+
+				<div class="admin-field col-6">
+					<label for="admGovInstitution">Government Institution / Office <span class="label-bn">(যে সরকারি প্রতিষ্ঠানের অনুকূলে)</span></label>
+					<textarea id="admGovInstitution" class="admin-textarea" oninput="syncCopy3Title()" placeholder="সার্কেল-১৮ (গোপালগঞ্জ সদর), পরিদর্শী রেঞ্জ-৪, কর অঞ্চল, ফরিদপুর"></textarea>
+				</div>
+				<div class="admin-field col-6">
+					<label for="admCopy3Title">Copy 3 Top-Left Title <span class="label-bn">(৩য় কপির শিরোনাম)</span></label>
+					<textarea id="admCopy3Title" class="admin-textarea" placeholder="সার্কেল-১৮ (গোপালগঞ্জ সদর), পরিদর্শী রেঞ্জ-৪, কর অঞ্চল, ফরিদপুর-এর কপি"></textarea>
+				</div>
+
+				<div class="admin-field col-6">
+					<label for="admDepositedBy">Deposited By <span class="label-bn">(যার মাধ্যমে টাকা প্রদত্ত হলো)</span></label>
+					<textarea id="admDepositedBy" class="admin-textarea" placeholder="Partha Bhattacharjee&#10;****"></textarea>
+				</div>
+				<div class="admin-field col-6">
+					<label for="admBehalfOf">On Behalf Of (Name, ID &amp; Address) <span class="label-bn">(যার পক্ষ হতে টাকা প্রদত্ত হলো)</span></label>
+					<textarea id="admBehalfOf" class="admin-textarea" placeholder="Partha Bhattacharjee, PARTHA BHATTACHARJEE&#10;৫২******০৫৬১&#10;VILL: PUISUR, POST: HATIARA, KASHIANI, Gopalganj"></textarea>
+				</div>
+
+				<div class="admin-field col-4">
+					<label for="admPurpose">Purpose / Description <span class="label-bn">(কি বাবদ জমা দেওয়া হলো)</span></label>
+					<input type="text" id="admPurpose" class="admin-input" placeholder="১১১১১০১-ব্যক্তি কর্তৃক দেয় আয়কর">
+				</div>
+				<div class="admin-field col-4">
+					<label for="admEconomicCode">New Economic Code <span class="label-bn">(নতুন কোড)</span></label>
+					<input type="text" id="admEconomicCode" class="admin-input" placeholder="১১১০২১৭১৪৩৮১০-১১০০০০০০০-১১০০১০০০-১১১১১০১">
+				</div>
+				<div class="admin-field col-4">
+					<label for="admRemarks">Remarks <span class="label-bn">(অন্যান্য বিবরণ/মন্তব্য)</span></label>
+					<input type="text" id="admRemarks" class="admin-input" placeholder="করবর্ষ ২০২৬-২৭ এর জন্য আয়কর ধারা ১৭৩ অনুযায়ী">
+				</div>
+
+				<div class="admin-field col-3">
+					<label for="admAmountEn">Amount (Numeric)</label>
+					<input type="text" id="admAmountEn" class="admin-input" placeholder="9,025.00" oninput="syncAmountBengali()">
+				</div>
+				<div class="admin-field col-3">
+					<label for="admAmountBn">Amount (Bengali) <span class="label-bn">(জমার পরিমাণ)</span></label>
+					<input type="text" id="admAmountBn" class="admin-input" placeholder="৯,০২৫.০০">
+				</div>
+				<div class="admin-field col-6">
+					<label for="admAmountWordsBn">Amount in Words (Bengali) <span class="label-bn">(টাকা কথায়)</span></label>
+					<div class="inline-input-group">
+						<input type="text" id="admAmountWordsBn" class="admin-input" placeholder="নয় হাজার পঁচিশ টাকা">
+						<button type="button" class="admin-btn admin-btn-secondary" onclick="autoFillBengaliWords()">Auto Words</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="admin-form-footer">
+				<button type="button" class="admin-btn admin-btn-primary" onclick="handleAdminSave(false)">Save Chalan</button>
+				<button type="button" class="admin-btn admin-btn-accent" onclick="handleAdminSave(true)">Save &amp; View Chalan</button>
+				<button type="button" class="admin-btn admin-btn-secondary" onclick="resetAdminForm()">Reset Form</button>
+			</div>
+		</div>
+
+		<!-- Saved Records Table Card -->
+		<div class="admin-card">
+			<div class="admin-card-title">
+				<span>Saved Chalan Records (<span id="savedCountBadge">0</span>)</span>
+				<div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+					<input
+						type="text"
+						id="admSearchBox"
+						class="admin-input"
+						style="width:220px; padding:5px 8px; font-size:12px;"
+						placeholder="Search chalan no, name, bank..."
+						oninput="renderAdminTable()"
+					>
+					<button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" onclick="exportChalansJson()">Export JSON</button>
+					<label class="admin-btn admin-btn-secondary admin-btn-sm" style="margin:0;">
+						Import JSON
+						<input type="file" accept=".json,application/json" style="display:none;" onchange="importChalansJson(event)">
+					</label>
+				</div>
+			</div>
+			<div class="admin-table-wrap">
+				<table class="admin-data-table">
+					<thead>
+						<tr>
+							<th>Chalan No</th>
+							<th>Depositor / Party</th>
+							<th>Date</th>
+							<th>Bank &amp; Branch</th>
+							<th>Amount</th>
+							<th>Actions</th>
+						</tr>
+					</thead>
+					<tbody id="adminRecordsTbody"></tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- ========================================================================
+     INVISIBLE 16x16 BOTTOM-RIGHT HOTSPOT FOR DISCREET ADMIN ACCESS
+     ======================================================================== -->
+<div class="discreet-corner-trigger no-print" tabindex="0">
+	<a onclick="navigateTo('verify')">Verify Portal</a>
+	<span>|</span>
+	<a onclick="navigateTo('admin')">Manage Chalans</a>
+</div>
+
+<!-- ========================================================================
+     LEGACY POPUP CALENDAR TABLE (EXACT USER-PROVIDED IDS & CLASSES)
+     ======================================================================== -->
+<table id="calenderTable" cellpadding="1" cellspacing="1">
+	<tbody id="calenderTableHead">
+		<tr>
+			<td colspan="4" align="center">
+				<select onChange="showCalenderBody(createCalender(document.getElementById('selectYear').value, this.selectedIndex, false));" id="selectMonth">
+					<option value="0">Jan</option>
+					<option value="1">Feb</option>
+					<option value="2">Mar</option>
+					<option value="3">Apr</option>
+					<option value="4">May</option>
+					<option value="5">Jun</option>
+					<option value="6">Jul</option>
+					<option value="7">Aug</option>
+					<option value="8">Sep</option>
+					<option value="9">Oct</option>
+					<option value="10">Nov</option>
+					<option value="11">Dec</option>
+				</select>
+			</td>
+			<td colspan="2" align="center">
+				<select onChange="showCalenderBody(createCalender(this.value, document.getElementById('selectMonth').selectedIndex, false));" id="selectYear"></select>
+			</td>
+			<td align="center">
+				<a href="javascript:void(0);" onClick="closeCalender();" class="cal-close-btn" title="Close Calendar">X</a>
+			</td>
+		</tr>
+	</tbody>
+	<tbody id="calenderTableDays">
+		<tr>
+			<td>Sun</td><td>Mon</td><td>Tue</td><td>Wed</td><td>Thu</td><td>Fri</td><td>Sat</td>
+		</tr>
+	</tbody>
+	<tbody id="calender"></tbody>
+</table>
+
+<!-- ========================================================================
+     CUSTOM CLASSIC ALERT / CONFIRM DIALOG (NO window.alert / confirm)
+     ======================================================================== -->
+<div id="classicAlertOverlay" class="classic-modal-overlay no-print" role="dialog" aria-modal="true">
+	<div class="classic-dialog-box">
+		<div class="classic-dialog-titlebar">
+			<span id="classicAlertTitle">Message from webpage</span>
+			<button type="button" class="classic-dialog-close-x" onclick="closeClassicDialog(false)">&times;</button>
+		</div>
+		<div class="classic-dialog-body">
+			<svg width="28" height="28" viewBox="0 0 32 32" style="flex-shrink:0;" aria-hidden="true">
+				<polygon points="16,2 30,28 2,28" fill="#FFD43B" stroke="#8A6D00" stroke-width="2"/>
+				<rect x="14.6" y="10" width="2.8" height="10" fill="#000000"/>
+				<rect x="14.6" y="22.2" width="2.8" height="2.8" fill="#000000"/>
+			</svg>
+			<div id="classicAlertMessage"></div>
+		</div>
+		<div class="classic-dialog-footer">
+			<button type="button" id="classicAlertOkBtn" class="classic-dialog-ok" onclick="closeClassicDialog(true)">OK</button>
+			<button type="button" id="classicAlertCancelBtn" class="classic-dialog-ok" style="display:none;" onclick="closeClassicDialog(false)">Cancel</button>
+		</div>
+	</div>
+</div>
+
+<!-- Toast Notification -->
+<div id="adminToast" class="admin-toast no-print"></div>
+
+<script type="text/javascript">
+/**
+ * ============================================================================
+ * 1. EMBEDDED ISO/IEC 18004 PURE-JAVASCRIPT QR CODE ENCODER (PureQR)
+ *    - Supports Versions 1–15, Byte Mode, Error Correction Level H (30%),
+ *      enforced minimum Version 8 (49x49 with 6 alignment patterns), GF(256)
+ *      Reed-Solomon, all 8 mask patterns, BCH(15,5) format info & BCH(18,6)
+ *      version info.
+ *    - Works 100% offline with zero external QR library dependencies.
+ *    - Renders high-resolution 444x312 (6x of 74x52) vivid #66F9FF PNG QR codes!
+ * ============================================================================
+ */
+var PureQR = (function() {
+	// ISO/IEC 18004 Table 9 for Error Correction Level H (Versions 1 to 15)
+	// [totalCodewords, ecPerBlock, g1Blocks, g1DataCW, g2Blocks, g2DataCW]
+	var VERSION_SPEC_H = [
+		null,
+		[26,  17,  1,  9, 0,  0],  // V1-H  (21x21)
+		[44,  28,  1, 16, 0,  0],  // V2-H  (25x25)
+		[70,  22,  2, 13, 0,  0],  // V3-H  (29x29)
+		[100, 16,  4,  9, 0,  0],  // V4-H  (33x33)
+		[134, 22,  2, 11, 2, 12],  // V5-H  (37x37)
+		[172, 28,  4, 15, 0,  0],  // V6-H  (41x41)
+		[196, 26,  4, 13, 1, 14],  // V7-H  (45x45)
+		[242, 26,  4, 14, 2, 15],  // V8-H  (49x49, 86 data CW, 6 alignment patterns)
+		[292, 24,  4, 12, 4, 13],  // V9-H  (53x53, 100 data CW, 6 alignment patterns)
+		[346, 28,  6, 15, 2, 16],  // V10-H (57x57, 122 data CW, 6 alignment patterns)
+		[404, 24,  3, 12, 8, 13],  // V11-H (61x61, 140 data CW, 6 alignment patterns)
+		[466, 28,  7, 14, 4, 15],  // V12-H (65x65, 158 data CW, 6 alignment patterns)
+		[532, 22, 12, 11, 4, 12],  // V13-H (69x69, 180 data CW, 6 alignment patterns)
+		[581, 24, 11, 12, 5, 13],  // V14-H (73x73, 197 data CW, 13 alignment patterns)
+		[655, 24, 11, 12, 7, 13]   // V15-H (77x77, 223 data CW, 13 alignment patterns)
+	];
+
+	// ISO/IEC 18004 Annex E Alignment Pattern Center Coordinates (Versions 1 to 15)
+	var ALIGNMENT_COORDS = [
+		null,
+		[],
+		[6, 18],
+		[6, 22],
+		[6, 26],
+		[6, 30],
+		[6, 34],
+		[6, 22, 38],
+		[6, 24, 42],
+		[6, 26, 46],
+		[6, 28, 50],
+		[6, 30, 54],
+		[6, 32, 58],
+		[6, 34, 62],
+		[6, 26, 46, 66],
+		[6, 26, 48, 70]
+	];
+
+	// Precompute GF(256) log/exp tables with primitive polynomial 0x11D
+	var GF_EXP = new Array(512);
+	var GF_LOG = new Array(256);
+	(function initGalois() {
+		var x = 1;
+		for (var i = 0; i < 255; i++) {
+			GF_EXP[i] = x;
+			GF_LOG[x] = i;
+			x <<= 1;
+			if (x & 0x100) x ^= 0x11D;
+		}
+		for (var j = 255; j < 512; j++) {
+			GF_EXP[j] = GF_EXP[j - 255];
+		}
+	})();
+
+	function gfMul(a, b) {
+		if (a === 0 || b === 0) return 0;
+		return GF_EXP[GF_LOG[a] + GF_LOG[b]];
+	}
+
+	function rsGeneratorPoly(degree) {
+		var poly = [1];
+		for (var i = 0; i < degree; i++) {
+			var next = new Array(poly.length + 1);
+			for (var k = 0; k < next.length; k++) next[k] = 0;
+			var root = GF_EXP[i];
+			for (var j = 0; j < poly.length; j++) {
+				next[j] ^= poly[j];
+				next[j + 1] ^= gfMul(poly[j], root);
+			}
+			poly = next;
+		}
+		return poly;
+	}
+
+	function rsComputeRemainder(data, ecCount) {
+		var gen = rsGeneratorPoly(ecCount);
+		var rem = new Array(ecCount);
+		for (var i = 0; i < ecCount; i++) rem[i] = 0;
+
+		for (var d = 0; d < data.length; d++) {
+			var factor = data[d] ^ rem[0];
+			rem.shift();
+			rem.push(0);
+			if (factor !== 0) {
+				for (var j = 0; j < ecCount; j++) {
+					rem[j] ^= gfMul(gen[j + 1], factor);
+				}
+			}
+		}
+		return rem;
+	}
+
+	function stringToUtf8Bytes(str) {
+		var bytes = [];
+		for (var i = 0; i < str.length; i++) {
+			var code = str.charCodeAt(i);
+			if (code < 0x80) {
+				bytes.push(code);
+			} else if (code < 0x800) {
+				bytes.push(0xC0 | (code >> 6), 0x80 | (code & 0x3F));
+			} else if (code < 0xD800 || code >= 0xE000) {
+				bytes.push(0xE0 | (code >> 12), 0x80 | ((code >> 6) & 0x3F), 0x80 | (code & 0x3F));
+			} else {
+				i++;
+				var cp = 0x10000 + (((code & 0x3FF) << 10) | (str.charCodeAt(i) & 0x3FF));
+				bytes.push(
+					0xF0 | (cp >> 18),
+					0x80 | ((cp >> 12) & 0x3F),
+					0x80 | ((cp >> 6) & 0x3F),
+					0x80 | (cp & 0x3F)
+				);
+			}
+		}
+		return bytes;
+	}
+
+	function chooseVersion(byteLen) {
+		// Enforce minimum Version 8 (49x49, 6 alignment patterns) for high-density official look
+		for (var v = 8; v <= 15; v++) {
+			var spec = VERSION_SPEC_H[v];
+			var totalDataCW = spec[2] * spec[3] + spec[4] * spec[5];
+			var countBits = v <= 9 ? 8 : 16;
+			var requiredBits = 4 + countBits + byteLen * 8;
+			if (requiredBits <= totalDataCW * 8) {
+				return v;
+			}
+		}
+		return 15;
+	}
+
+	function pushBits(bitArr, value, count) {
+		for (var i = count - 1; i >= 0; i--) {
+			bitArr.push((value >>> i) & 1);
+		}
+	}
+
+	function buildCodewords(bytes, version) {
+		var spec = VERSION_SPEC_H[version];
+		var ecPerBlock = spec[1];
+		var g1Blocks = spec[2], g1DataCW = spec[3];
+		var g2Blocks = spec[4], g2DataCW = spec[5];
+		var totalDataCW = g1Blocks * g1DataCW + g2Blocks * g2DataCW;
+		var totalDataBits = totalDataCW * 8;
+
+		var bits = [];
+		// Mode indicator: Byte Mode (0100)
+		pushBits(bits, 0x4, 4);
+		// Character count indicator
+		var countBits = version <= 9 ? 8 : 16;
+		var usableBytes = bytes.slice(0, Math.floor((totalDataBits - 4 - countBits) / 8));
+		pushBits(bits, usableBytes.length, countBits);
+		// Payload bytes
+		for (var i = 0; i < usableBytes.length; i++) {
+			pushBits(bits, usableBytes[i], 8);
+		}
+		// Terminator (up to 4 zero bits)
+		var termLen = Math.min(4, totalDataBits - bits.length);
+		pushBits(bits, 0, termLen);
+		// Pad to byte boundary
+		while (bits.length % 8 !== 0) bits.push(0);
+
+		var dataCW = [];
+		for (var b = 0; b < bits.length; b += 8) {
+			var val = 0;
+			for (var k = 0; k < 8; k++) val = (val << 1) | bits[b + k];
+			dataCW.push(val);
+		}
+		// Pad alternating 0xEC, 0x11
+		var padToggle = 0;
+		while (dataCW.length < totalDataCW) {
+			dataCW.push(padToggle === 0 ? 0xEC : 0x11);
+			padToggle ^= 1;
+		}
+
+		// Split into RS blocks & compute EC codewords
+		var dataBlocks = [];
+		var ecBlocks = [];
+		var offset = 0;
+		for (var b1 = 0; b1 < g1Blocks; b1++) {
+			var blk1 = dataCW.slice(offset, offset + g1DataCW);
+			offset += g1DataCW;
+			dataBlocks.push(blk1);
+			ecBlocks.push(rsComputeRemainder(blk1, ecPerBlock));
+		}
+		for (var b2 = 0; b2 < g2Blocks; b2++) {
+			var blk2 = dataCW.slice(offset, offset + g2DataCW);
+			offset += g2DataCW;
+			dataBlocks.push(blk2);
+			ecBlocks.push(rsComputeRemainder(blk2, ecPerBlock));
+		}
+
+		// Interleave data codewords, then EC codewords
+		var interleaved = [];
+		var maxDataLen = Math.max(g1DataCW, g2DataCW);
+		for (var di = 0; di < maxDataLen; di++) {
+			for (var db = 0; db < dataBlocks.length; db++) {
+				if (di < dataBlocks[db].length) interleaved.push(dataBlocks[db][di]);
+			}
+		}
+		for (var ei = 0; ei < ecPerBlock; ei++) {
+			for (var eb = 0; eb < ecBlocks.length; eb++) {
+				interleaved.push(ecBlocks[eb][ei]);
+			}
+		}
+		return interleaved;
+	}
+
+	function createEmptyMatrix(size) {
+		var m = new Array(size);
+		var isFunc = new Array(size);
+		for (var r = 0; r < size; r++) {
+			m[r] = new Array(size);
+			isFunc[r] = new Array(size);
+			for (var c = 0; c < size; c++) {
+				m[r][c] = false;
+				isFunc[r][c] = false;
+			}
+		}
+		return { modules: m, isFunc: isFunc, size: size };
+	}
+
+	function setFuncModule(mat, r, c, dark) {
+		if (r >= 0 && r < mat.size && c >= 0 && c < mat.size) {
+			mat.modules[r][c] = !!dark;
+			mat.isFunc[r][c] = true;
+		}
+	}
+
+	function drawFinderPattern(mat, topR, topC) {
+		for (var dr = -1; dr <= 7; dr++) {
+			for (var dc = -1; dc <= 7; dc++) {
+				var r = topR + dr;
+				var c = topC + dc;
+				if (r < 0 || r >= mat.size || c < 0 || c >= mat.size) continue;
+				var inBorder = (dr >= 0 && dr <= 6 && (dc === 0 || dc === 6)) ||
+					(dc >= 0 && dc <= 6 && (dr === 0 || dr === 6));
+				var inCenter = dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4;
+				setFuncModule(mat, r, c, inBorder || inCenter);
+			}
+		}
+	}
+
+	function drawAlignmentPattern(mat, centerR, centerC) {
+		for (var dr = -2; dr <= 2; dr++) {
+			for (var dc = -2; dc <= 2; dc++) {
+				var dist = Math.max(Math.abs(dr), Math.abs(dc));
+				setFuncModule(mat, centerR + dr, centerC + dc, dist !== 1);
+			}
+		}
+	}
+
+	function computeFormatBitsH(mask) {
+		// EC Level H indicator = 10 binary (2), BCH(15,5) generator 0x537, mask 0x5412
+		var data = (2 << 3) | (mask & 7);
+		var rem = data << 10;
+		for (var i = 4; i >= 0; i--) {
+			if ((rem >>> (i + 10)) & 1) {
+				rem ^= (0x537 << i);
+			}
+		}
+		return ((data << 10) | rem) ^ 0x5412;
+	}
+
+	function drawFormatBits(mat, mask) {
+		var bits = computeFormatBitsH(mask);
+		var s = mat.size;
+		// Top-left copy (MSB = bit 14 down to LSB = bit 0)
+		for (var i = 0; i <= 5; i++) setFuncModule(mat, 8, i, ((bits >>> (14 - i)) & 1) !== 0);
+		setFuncModule(mat, 8, 7, ((bits >>> 8) & 1) !== 0);
+		setFuncModule(mat, 8, 8, ((bits >>> 7) & 1) !== 0);
+		setFuncModule(mat, 7, 8, ((bits >>> 6) & 1) !== 0);
+		for (var j = 0; j <= 5; j++) setFuncModule(mat, 5 - j, 8, ((bits >>> (5 - j)) & 1) !== 0);
+
+		// Bottom-left & Top-right copy
+		for (var k = 0; k < 7; k++) setFuncModule(mat, s - 1 - k, 8, ((bits >>> (14 - k)) & 1) !== 0);
+		for (var m = 0; m < 8; m++) setFuncModule(mat, 8, s - 8 + m, ((bits >>> (7 - m)) & 1) !== 0);
+
+		// Fixed dark module
+		setFuncModule(mat, s - 8, 8, true);
+	}
+
+	function drawVersionBits(mat, version) {
+		if (version < 7) return;
+		var rem = version << 12;
+		for (var i = 5; i >= 0; i--) {
+			if ((rem >>> (i + 12)) & 1) {
+				rem ^= (0x1F25 << i);
+			}
+		}
+		var bits = (version << 12) | rem;
+		var s = mat.size;
+		for (var b = 0; b < 18; b++) {
+			var dark = ((bits >>> b) & 1) !== 0;
+			var a = s - 11 + (b % 3);
+			var c = Math.floor(b / 3);
+			setFuncModule(mat, a, c, dark);
+			setFuncModule(mat, c, a, dark);
+		}
+	}
+
+	function drawFunctionPatterns(mat, version) {
+		var s = mat.size;
+		// Timing patterns
+		for (var i = 0; i < s; i++) {
+			setFuncModule(mat, 6, i, i % 2 === 0);
+			setFuncModule(mat, i, 6, i % 2 === 0);
+		}
+		// Three finder patterns + separators
+		drawFinderPattern(mat, 0, 0);
+		drawFinderPattern(mat, 0, s - 7);
+		drawFinderPattern(mat, s - 7, 0);
+
+		// Alignment patterns
+		var coords = ALIGNMENT_COORDS[version] || [];
+		for (var a = 0; a < coords.length; a++) {
+			for (var b = 0; b < coords.length; b++) {
+				var r = coords[a], c = coords[b];
+				if ((a === 0 && b === 0) || (a === 0 && b === coords.length - 1) || (a === coords.length - 1 && b === 0)) {
+					continue;
+				}
+				drawAlignmentPattern(mat, r, c);
+			}
+		}
+
+		// Reserve format & version info areas before data placement
+		drawFormatBits(mat, 0);
+		drawVersionBits(mat, version);
+	}
+
+	function placeCodewords(mat, codewords) {
+		var s = mat.size;
+		var bitIdx = 0;
+		var totalBits = codewords.length * 8;
+		var upward = true;
+
+		for (var right = s - 1; right >= 1; right -= 2) {
+			if (right === 6) right = 5; // Skip vertical timing column
+			for (var vert = 0; vert < s; vert++) {
+				var r = upward ? (s - 1 - vert) : vert;
+				for (var dx = 0; dx < 2; dx++) {
+					var c = right - dx;
+					if (!mat.isFunc[r][c]) {
+						var dark = false;
+						if (bitIdx < totalBits) {
+							dark = ((codewords[bitIdx >>> 3] >>> (7 - (bitIdx & 7))) & 1) !== 0;
+							bitIdx++;
+						}
+						mat.modules[r][c] = dark;
+					}
+				}
+			}
+			upward = !upward;
+		}
+	}
+
+	function maskBit(mask, r, c) {
+		switch (mask) {
+			case 0: return (r + c) % 2 === 0;
+			case 1: return r % 2 === 0;
+			case 2: return c % 3 === 0;
+			case 3: return (r + c) % 3 === 0;
+			case 4: return (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0;
+			case 5: return ((r * c) % 2) + ((r * c) % 3) === 0;
+			case 6: return (((r * c) % 2) + ((r * c) % 3)) % 2 === 0;
+			case 7: return (((r + c) % 2) + ((r * c) % 3)) % 2 === 0;
+			default: return false;
+		}
+	}
+
+	function applyMask(mat, mask) {
+		var s = mat.size;
+		for (var r = 0; r < s; r++) {
+			for (var c = 0; c < s; c++) {
+				if (!mat.isFunc[r][c] && maskBit(mask, r, c)) {
+					mat.modules[r][c] = !mat.modules[r][c];
+				}
+			}
+		}
+	}
+
+	function evaluatePenalty(mat) {
+		var s = mat.size;
+		var m = mat.modules;
+		var penalty = 0;
+
+		// Rule 1: Adjacent modules in row/column of same color
+		for (var r = 0; r < s; r++) {
+			var runColor = m[r][0], runLen = 1;
+			for (var c = 1; c < s; c++) {
+				if (m[r][c] === runColor) {
+					runLen++;
+					if (runLen === 5) penalty += 3;
+					else if (runLen > 5) penalty += 1;
+				} else {
+					runColor = m[r][c];
+					runLen = 1;
+				}
+			}
+		}
+		for (var c2 = 0; c2 < s; c2++) {
+			var runColor2 = m[0][c2], runLen2 = 1;
+			for (var r2 = 1; r2 < s; r2++) {
+				if (m[r2][c2] === runColor2) {
+					runLen2++;
+					if (runLen2 === 5) penalty += 3;
+					else if (runLen2 > 5) penalty += 1;
+				} else {
+					runColor2 = m[r2][c2];
+					runLen2 = 1;
+				}
+			}
+		}
+
+		// Rule 2: 2x2 blocks of same color
+		for (var r3 = 0; r3 < s - 1; r3++) {
+			for (var c3 = 0; c3 < s - 1; c3++) {
+				var col = m[r3][c3];
+				if (col === m[r3][c3 + 1] && col === m[r3 + 1][c3] && col === m[r3 + 1][c3 + 1]) {
+					penalty += 3;
+				}
+			}
+		}
+
+		// Rule 3: Finder-like 1:1:3:1:1 patterns with 4 light modules
+		for (var r4 = 0; r4 < s; r4++) {
+			for (var c4 = 0; c4 <= s - 11; c4++) {
+				var pA = m[r4][c4] && !m[r4][c4+1] && m[r4][c4+2] && m[r4][c4+3] && m[r4][c4+4] && !m[r4][c4+5] && m[r4][c4+6] && !m[r4][c4+7] && !m[r4][c4+8] && !m[r4][c4+9] && !m[r4][c4+10];
+				var pB = !m[r4][c4] && !m[r4][c4+1] && !m[r4][c4+2] && !m[r4][c4+3] && m[r4][c4+4] && !m[r4][c4+5] && m[r4][c4+6] && m[r4][c4+7] && m[r4][c4+8] && !m[r4][c4+9] && m[r4][c4+10];
+				if (pA || pB) penalty += 40;
+			}
+		}
+		for (var c5 = 0; c5 < s; c5++) {
+			for (var r5 = 0; r5 <= s - 11; r5++) {
+				var qA = m[r5][c5] && !m[r5+1][c5] && m[r5+2][c5] && m[r5+3][c5] && m[r5+4][c5] && !m[r5+5][c5] && m[r5+6][c5] && !m[r5+7][c5] && !m[r5+8][c5] && !m[r5+9][c5] && !m[r5+10][c5];
+				var qB = !m[r5][c5] && !m[r5+1][c5] && !m[r5+2][c5] && !m[r5+3][c5] && m[r5+4][c5] && !m[r5+5][c5] && m[r5+6][c5] && m[r5+7][c5] && m[r5+8][c5] && !m[r5+9][c5] && m[r5+10][c5];
+				if (qA || qB) penalty += 40;
+			}
+		}
+
+		// Rule 4: Balance of dark modules
+		var darkCount = 0;
+		for (var r6 = 0; r6 < s; r6++) {
+			for (var c6 = 0; c6 < s; c6++) {
+				if (m[r6][c6]) darkCount++;
+			}
+		}
+		var total = s * s;
+		var k = Math.floor(Math.abs(darkCount * 20 - total * 10) / total);
+		penalty += k * 10;
+
+		return penalty;
+	}
+
+	function encode(text) {
+		var bytes = stringToUtf8Bytes(String(text || ""));
+		var version = chooseVersion(bytes.length);
+		var size = version * 4 + 17;
+		var codewords = buildCodewords(bytes, version);
+
+		var mat = createEmptyMatrix(size);
+		drawFunctionPatterns(mat, version);
+		placeCodewords(mat, codewords);
+
+		// Choose optimal mask (0..7) minimizing ISO penalty score
+		var bestMask = 0;
+		var minPenalty = Infinity;
+		for (var mask = 0; mask < 8; mask++) {
+			applyMask(mat, mask);
+			drawFormatBits(mat, mask);
+			var pen = evaluatePenalty(mat);
+			if (pen < minPenalty) {
+				minPenalty = pen;
+				bestMask = mask;
+			}
+			applyMask(mat, mask); // Revert mask
+		}
+
+		applyMask(mat, bestMask);
+		drawFormatBits(mat, bestMask);
+		return mat;
+	}
+
+	/**
+	 * Renders genuine ISO/IEC 18004 Level-H (min Version 8) QR code onto a razor-sharp
+	 * 6x rectangular canvas of 468x330 pixels (78x55px display) filled with bright
+	 * #54F6FF aqua-cyan matching the official demo receipt, with balanced quiet-zone
+	 * padding (34px L/R, 22px T/B) and integer-snapped black modules.
+	 */
+	function toCyanPngDataUrl(text, targetWidthPx, targetHeightPx) {
+		var qr = encode(text);
+		var pxW = targetWidthPx || 468;
+		var pxH = targetHeightPx || 330;
+
+		var padX = Math.round(pxW * (34 / 468));
+		var padY = Math.round(pxH * (22 / 330));
+		var innerW = pxW - padX * 2;
+		var innerH = pxH - padY * 2;
+
+		var canvas = document.createElement("canvas");
+		canvas.width = pxW;
+		canvas.height = pxH;
+		var ctx = canvas.getContext("2d");
+
+		// Bright aqua-cyan matching demo e-Challan receipt
+		ctx.fillStyle = "#54F6FF";
+		ctx.fillRect(0, 0, pxW, pxH);
+
+		// Crisp #000000 high-density QR modules drawn with integer-snapped shared edges
+		ctx.fillStyle = "#000000";
+		for (var r = 0; r < qr.size; r++) {
+			var y0 = Math.round(padY + (r * innerH) / qr.size);
+			var y1 = Math.round(padY + ((r + 1) * innerH) / qr.size);
+			var modH = Math.max(1, y1 - y0);
+			for (var c = 0; c < qr.size; c++) {
+				if (qr.modules[r][c]) {
+					var x0 = Math.round(padX + (c * innerW) / qr.size);
+					var x1 = Math.round(padX + ((c + 1) * innerW) / qr.size);
+					var modW = Math.max(1, x1 - x0);
+					ctx.fillRect(x0, y0, modW, modH);
+				}
+			}
+		}
+		return canvas.toDataURL("image/png");
+	}
+
+	return {
+		encode: encode,
+		toCyanPngDataUrl: toCyanPngDataUrl
+	};
+})();
+
+/**
+ * ============================================================================
+ * 2. CONSTANTS, EXACT 2-BANK / BRANCH RULES & DEFAULT PRE-LOADED RECORD
+ * ============================================================================
+ */
+var STORAGE_KEY_RECORDS = "bd_cga_chalan_records_v4";
+var STORAGE_KEY_QR_BASE = "bd_cga_qr_base_url_v4";
+
+var DEFAULT_CHALAN_RECORD = {
+	challanNo: "2627-0009880470",
+	challanNoDisplayBn: "২৬২৭-০০০৯৮৮০৪৭০১",
+	bankName: "Sonali Bank",
+	branchName: "Local Office,Dhaka",
+	bankHeaderLine: "সোনালী ব্যাংক পিএলসি, স্থানীয় কার্যালয়, ঢাকা শাখায় টাকা জমা দেওয়ার চালান",
+	depositMode: "e-Payment",
+	dateEn: "11/08/2026",
+	dateBn: "১১/০৮/২০২৬ খ্রি.",
+	govInstitution: "সার্কেল-১৮ (গোপালগঞ্জ সদর), পরিদর্শী রেঞ্জ-৪, কর অঞ্চল, ফরিদপুর",
+	copy3Title: "সার্কেল-১৮ (গোপালগঞ্জ সদর), পরিদর্শী রেঞ্জ-৪, কর অঞ্চল, ফরিদপুর-এর কপি",
+	depositedBy: "Partha Bhattacharjee\n****",
+	behalfOf: "Partha Bhattacharjee, PARTHA BHATTACHARJEE\n৫২******০৫৬১\nVILL: PUISUR, POST: HATIARA, KASHIANI, Gopalganj",
+	purpose: "১১১১১০১-ব্যক্তি কর্তৃক দেয় আয়কর",
+	amountEn: "9,025.00",
+	amountBn: "৯,০২৫.০০",
+	amountWordsBn: "নয় হাজার পঁচিশ টাকা",
+	economicCode: "১১১০২১৭১৪৩৮১০-১১০০০০০০০-১১০০১০০০-১১১১১০১",
+	remarks: "করবর্ষ ২০২৬-২৭ এর জন্য আয়কর ধারা ১৭৩ অনুযায়ী"
+};
+
+/* Strictly 2 Banks: Bangladesh Bank ("1") & Sonali Bank ("2") */
+var BANGLADESH_BANK_BRANCHES = [
+	"BB - Barishal",
+	"BB - Bogura",
+	"BB - Chattogram",
+	"BB - Dhaka (Motijheel)",
+	"BB - Khulna",
+	"BB - Mymensingh",
+	"BB - Rajshahi",
+	"BB - Rangpur",
+	"BB - Sadarghat",
+	"BB - Sylhet"
+];
+
+var SONALI_BANK_BRANCHES = [
+	"Local Office,Dhaka",
+	"Motijheel Corporate",
+	"Ramna Corporate",
+	"Chattogram Local Office",
+	"Sylhet Corporate",
+	"Rajshahi Corporate",
+	"Khulna Corporate",
+	"Barishal Corporate",
+	"Gopalganj Branch",
+	"Faridpur Corporate"
+];
+
+/* Single branch enforced for e-Payment regardless of Bank selection */
+var EPAYMENT_ONLY_BRANCH = ["Local Office,Dhaka"];
+
+var currentActiveChalan = null;
+var dialogCallback = null;
+window.__chalanMedia = { qrs: [], barcodes: [] };
+
+/**
+ * ============================================================================
+ * 3. BENGALI <-> ENGLISH DIGIT UTILITIES & NUMBER-TO-BENGALI-WORDS CONVERTER
+ * ============================================================================
+ */
+var BN_DIGITS = ["০", "১", "২", "৩", "৪", "৫", "৬", "৭", "৮", "৯"];
+
+function toBengaliDigits(input) {
+	return String(input || "").replace(/[0-9]/g, function(d) {
+		return BN_DIGITS[parseInt(d, 10)];
+	});
+}
+
+function toEnglishDigits(input) {
+	return String(input || "").replace(/[০-৯]/g, function(ch) {
+		var idx = BN_DIGITS.indexOf(ch);
+		return idx >= 0 ? String(idx) : ch;
+	});
+}
+
+function formatSouthAsianNumber(numValue) {
+	var cleaned = toEnglishDigits(String(numValue || "")).replace(/[^0-9.]/g, "");
+	var num = parseFloat(cleaned);
+	if (isNaN(num)) return "";
+	var fixed = num.toFixed(2);
+	var parts = fixed.split(".");
+	var intPart = parts[0];
+	var decPart = parts[1];
+
+	if (intPart.length > 3) {
+		var lastThree = intPart.slice(-3);
+		var rest = intPart.slice(0, -3);
+		rest = rest.replace(/\B(?=(\d{2})+(?!\d))/g, ",");
+		intPart = rest + "," + lastThree;
+	}
+	return intPart + "." + decPart;
+}
+
+var BN_0_TO_99 = [
+	"শূন্য", "এক", "দুই", "তিন", "চার", "পাঁচ", "ছয়", "সাত", "আট", "নয়",
+	"দশ", "এগারো", "বারো", "তেরো", "চৌদ্দ", "পনেরো", "ষোল", "সতেরো", "আঠারো", "উনিশ",
+	"বিশ", "একুশ", "বাইশ", "তেইশ", "চব্বিশ", "পঁচিশ", "ছাব্বিশ", "সাতাশ", "আটাশ", "ঊনত্রিশ",
+	"ত্রিশ", "একত্রিশ", "বত্রিশ", "তেত্রিশ", "চৌত্রিশ", "পঁয়ত্রিশ", "ছত্রিশ", "সাঁইত্রিশ", "আটত্রিশ", "ঊনচল্লিশ",
+	"চল্লিশ", "একচল্লিশ", "বিয়াল্লিশ", "তেতাল্লিশ", "চুয়াল্লিশ", "পঁয়তাল্লিশ", "ছেচল্লিশ", "সাতচল্লিশ", "আটচল্লিশ", "ঊনপঞ্চাশ",
+	"পঞ্চাশ", "একান্ন", "বাহান্ন", "তিপ্পান্ন", "চুয়ান্ন", "পঞ্চান্ন", "ছাপ্পান্ন", "সাতান্ন", "আটান্ন", "ঊনষাট",
+	"ষাট", "একষট্টি", "বাষট্টি", "তেষট্টি", "চৌষট্টি", "পঁয়ষট্টি", "ছেষট্টি", "সাতষট্টি", "আটষট্টি", "ঊনসত্তর",
+	"সত্তর", "একাত্তর", "বাহাত্তর", "তিয়াত্তর", "চুয়াত্তর", "পঁচাত্তর", "ছিয়াত্তর", "সাতাত্তর", "আটাত্তর", "ঊনআশি",
+	"আশি", "একাশি", "বিরাশি", "তিরাশি", "চুরাশি", "পঁচাশি", "ছিয়াশি", "সাতাশি", "আটাশি", "ঊননব্বই",
+	"নব্বই", "একানব্বই", "বিরানব্বই", "তিরানব্বই", "চুরানব্বই", "পঁচানব্বই", "ছিয়ানব্বই", "সাতানব্বই", "আটানব্বই", "নিরানব্বই"
+];
+
+function integerToBengaliWords(n) {
+	if (n === 0) return BN_0_TO_99[0];
+	var parts = [];
+
+	var crore = Math.floor(n / 10000000);
+	n = n % 10000000;
+	if (crore > 0) {
+		parts.push((crore >= 100 ? integerToBengaliWords(crore) : BN_0_TO_99[crore]) + " কোটি");
+	}
+
+	var lakh = Math.floor(n / 100000);
+	n = n % 100000;
+	if (lakh > 0) {
+		parts.push(BN_0_TO_99[lakh] + " লক্ষ");
+	}
+
+	var thousand = Math.floor(n / 1000);
+	n = n % 1000;
+	if (thousand > 0) {
+		parts.push(BN_0_TO_99[thousand] + " হাজার");
+	}
+
+	var hundred = Math.floor(n / 100);
+	n = n % 100;
+	if (hundred > 0) {
+		parts.push(BN_0_TO_99[hundred] + " শত");
+	}
+
+	if (n > 0) {
+		parts.push(BN_0_TO_99[n]);
+	}
+
+	return parts.join(" ");
+}
+
+function amountToBengaliWords(rawAmount) {
+	var cleaned = toEnglishDigits(String(rawAmount || "")).replace(/[^0-9.]/g, "");
+	var num = parseFloat(cleaned);
+	if (isNaN(num) || num < 0) return "";
+
+	var taka = Math.floor(num);
+	var poisha = Math.round((num - taka) * 100);
+	if (poisha === 100) {
+		taka += 1;
+		poisha = 0;
+	}
+
+	var result = integerToBengaliWords(taka) + " টাকা";
+	if (poisha > 0) {
+		result += " " + BN_0_TO_99[poisha] + " পয়সা";
+	}
+	return result;
+}
+
+function escapeHtml(text) {
+	var map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" };
+	return String(text || "").replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
+function nl2brEscaped(text) {
+	return escapeHtml(text).replace(/\r?\n/g, "<br>");
+}
+
+/**
+ * ============================================================================
+ * 4. PERSISTENT LOCALSTORAGE DATABASE & FLEXIBLE CHALAN MATCHER
+ * ============================================================================
+ */
+function loadAllChalans() {
+	try {
+		var raw = localStorage.getItem(STORAGE_KEY_RECORDS);
+		if (!raw) {
+			var legacy = localStorage.getItem("bd_cga_chalan_records_v3");
+			if (legacy) {
+				var parsedLegacy = JSON.parse(legacy);
+				if (Array.isArray(parsedLegacy) && parsedLegacy.length > 0) {
+					saveAllChalans(parsedLegacy);
+					return parsedLegacy;
+				}
+			}
+			var initial = [Object.assign({}, DEFAULT_CHALAN_RECORD)];
+			saveAllChalans(initial);
+			return initial;
+		}
+		var parsed = JSON.parse(raw);
+		if (!Array.isArray(parsed) || parsed.length === 0) {
+			var fallback = [Object.assign({}, DEFAULT_CHALAN_RECORD)];
+			saveAllChalans(fallback);
+			return fallback;
+		}
+		return parsed;
+	} catch (e) {
+		return [Object.assign({}, DEFAULT_CHALAN_RECORD)];
+	}
+}
+
+function saveAllChalans(list) {
+	try {
+		localStorage.setItem(STORAGE_KEY_RECORDS, JSON.stringify(list));
+	} catch (e) {
+		showToast("Unable to save to localStorage.");
+	}
+}
+
+function normalizeChalanKey(str) {
+	return toEnglishDigits(String(str || "")).replace(/\s+/g, "").toLowerCase();
+}
+
+/**
+ * Matches full challanNo, Bengali display challanNo, short prefix variant,
+ * or serial number alone (with/without trailing check digit).
+ */
+function findChalanRecord(queryStr, optionalSerial) {
+	var list = loadAllChalans();
+	var qNorm = normalizeChalanKey(queryStr);
+	var serialNorm = normalizeChalanKey(optionalSerial || "");
+
+	if (!qNorm && !serialNorm) return null;
+
+	var qParts = qNorm.split("-");
+	var qPrefix = qParts.length > 1 ? qParts[0] : "";
+	var qSerial = qParts.length > 1 ? qParts.slice(1).join("-") : qNorm;
+	if (!serialNorm && qSerial) serialNorm = qSerial;
+
+	// Pass 1: Exact match against challanNo or challanNoDisplayBn
+	for (var i = 0; i < list.length; i++) {
+		var rec = list[i];
+		var rFull = normalizeChalanKey(rec.challanNo);
+		var rBn = normalizeChalanKey(rec.challanNoDisplayBn);
+		if (qNorm && (rFull === qNorm || rBn === qNorm)) {
+			return rec;
+		}
+	}
+
+	// Pass 2: Flexible prefix + serial match
+	for (var j = 0; j < list.length; j++) {
+		var rec2 = list[j];
+		var rParts = normalizeChalanKey(rec2.challanNo).split("-");
+		var rPrefix = rParts.length > 1 ? rParts[0] : "";
+		var rSerial = rParts.length > 1 ? rParts.slice(1).join("-") : rParts[0];
+
+		var bnParts = normalizeChalanKey(rec2.challanNoDisplayBn).split("-");
+		var bnSerial = bnParts.length > 1 ? bnParts.slice(1).join("-") : bnParts[0];
+
+		var serialMatches = serialNorm && (
+			rSerial === serialNorm ||
+			bnSerial === serialNorm ||
+			(serialNorm.length >= 6 && bnSerial.indexOf(serialNorm) === 0) ||
+			(rSerial.length >= 6 && serialNorm.indexOf(rSerial) === 0)
+		);
+
+		if (serialMatches) {
+			if (!qPrefix || rPrefix.indexOf(qPrefix) === 0 || qPrefix.indexOf(rPrefix) === 0) {
+				return rec2;
+			}
+		}
+	}
+
+	return null;
+}
+
+function getQrBaseUrl() {
+	try {
+		return (localStorage.getItem(STORAGE_KEY_QR_BASE) || "").trim();
+	} catch (e) {
+		return "";
+	}
+}
+
+/**
+ * QR codes encode the MAIN VERIFICATION PORTAL URL with ?challanNo=<challanNo>
+ * matching real portal behavior: index.php?challanNo=2627-0009880470
+ */
+function buildQrVerificationUrl(challanNo) {
+	var customBase = getQrBaseUrl();
+	var encodedNo = encodeURIComponent(challanNo);
+
+	if (customBase) {
+		if (customBase.indexOf("challanNo=") !== -1 || customBase.slice(-1) === "=") {
+			return customBase + encodedNo;
+		}
+		if (customBase.indexOf("?") !== -1) {
+			return customBase + "&challanNo=" + encodedNo;
+		}
+		return customBase + "?challanNo=" + encodedNo;
+	}
+
+	var loc = window.location;
+	var hasLiveOrigin = loc && loc.origin && loc.origin !== "null" && (loc.protocol === "http:" || loc.protocol === "https:");
+	var base = hasLiveOrigin
+		? (loc.origin + loc.pathname)
+		: "https://challanverification.finance.gov.bd/echalan/index.php";
+
+	return base + "?challanNo=" + encodedNo;
+}
+
+/**
+ * ============================================================================
+ * 5. URL ROUTER & MAIN PORTAL AUTO-FILL FLOW
+ * ============================================================================
+ */
+function parseCurrentRoute() {
+	var params = new URLSearchParams(window.location.search || "");
+	var view = params.get("view");
+	var challanNo = params.get("challanNo") || params.get("chalanNo");
+
+	var rawHash = (window.location.hash || "").replace(/^#/, "").trim();
+	if (!view && rawHash) {
+		if (rawHash.toLowerCase() === "admin") {
+			view = "admin";
+		} else if (rawHash.toLowerCase() === "verify") {
+			view = "verify";
+		} else {
+			var hashParams = new URLSearchParams(rawHash);
+			view = hashParams.get("view") || view;
+			challanNo = hashParams.get("challanNo") || hashParams.get("chalanNo") || challanNo;
+		}
+	}
+
+	if (view !== "details" && view !== "admin") {
+		view = "verify";
+	}
+	return { view: view, challanNo: challanNo || "" };
+}
+
+function pushUrlQuery(queryString, stateObj) {
+	try {
+		if (window.location.origin && window.location.origin !== "null" && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
+			var target = queryString ? queryString : window.location.pathname;
+			window.history.pushState(stateObj, "", target);
+		} else {
+			window.location.hash = queryString ? queryString.replace(/^\?/, "") : "verify";
+		}
+	} catch (e) {
+		try {
+			window.location.hash = queryString ? queryString.replace(/^\?/, "") : "verify";
+		} catch (e2) {}
+	}
+}
+
+function navigateTo(view, challanNo) {
+	var query = "";
+	if (view === "details") {
+		query = "?view=details" + (challanNo ? ("&challanNo=" + encodeURIComponent(challanNo)) : "");
+	} else if (view === "admin") {
+		query = "?view=admin";
+	} else {
+		query = challanNo ? ("?challanNo=" + encodeURIComponent(challanNo)) : "";
+	}
+
+	pushUrlQuery(query, { view: view, challanNo: challanNo || "" });
+	renderRoute(view, challanNo || "");
+	window.scrollTo(0, 0);
+}
+
+/**
+ * Splits a challanNo (converting Bengali digits to English) into txtAutoPrefix
+ * and txtAutoChalanNo on the main page, leaving #dvResult strictly EMPTY.
+ */
+function populateAutoChalanInputsFromParam(challanNoParam) {
+	var prefixEl = document.getElementById("txtAutoPrefix");
+	var serialEl = document.getElementById("txtAutoChalanNo");
+	if (!prefixEl || !serialEl) return;
+
+	var cleaned = toEnglishDigits(String(challanNoParam || "")).trim();
+	if (!cleaned) {
+		prefixEl.value = "";
+		serialEl.value = "";
+		return;
+	}
+
+	if (cleaned.indexOf("-") !== -1) {
+		var parts = cleaned.split("-");
+		prefixEl.value = parts[0].trim();
+		serialEl.value = parts.slice(1).join("-").trim();
+	} else {
+		prefixEl.value = "";
+		serialEl.value = cleaned;
+	}
+}
+
+function renderRoute(view, challanNo) {
+	closeCalender();
+	var views = ["verify", "details", "admin"];
+	for (var i = 0; i < views.length; i++) {
+		var el = document.getElementById("view-" + views[i]);
+		if (el) {
+			if (views[i] === view) {
+				el.classList.add("active-view");
+			} else {
+				el.classList.remove("active-view");
+			}
+		}
+	}
+
+	document.body.classList.remove("mode-details", "mode-admin");
+	if (view === "details") {
+		document.body.classList.add("mode-details");
+		document.title = challanNo ? ("Chalan Verification - " + challanNo) : "Chalan Verification Details";
+		renderDetailsView(challanNo);
+	} else if (view === "admin") {
+		document.body.classList.add("mode-admin");
+		document.title = "Manage Chalans - Online Chalan Verification";
+		renderAdminView();
+	} else {
+		document.title = "Online Chalan Verification";
+		clearVerifyMessages();
+		populateAutoChalanInputsFromParam(challanNo);
+	}
+}
+
+window.addEventListener("popstate", function() {
+	var route = parseCurrentRoute();
+	renderRoute(route.view, route.challanNo);
+});
+
+window.addEventListener("hashchange", function() {
+	var route = parseCurrentRoute();
+	renderRoute(route.view, route.challanNo);
+});
+
+/* Discreet keyboard shortcuts: Alt+A or Ctrl+Shift+A opens Admin */
+document.addEventListener("keydown", function(e) {
+	var isAltA = e.altKey && !e.ctrlKey && !e.metaKey && (e.key === "a" || e.key === "A");
+	var isCtrlShiftA = (e.ctrlKey || e.metaKey) && e.shiftKey && (e.key === "a" || e.key === "A");
+	if (isAltA || isCtrlShiftA) {
+		e.preventDefault();
+		navigateTo("admin");
+		return;
+	}
+
+	var alertOverlay = document.getElementById("classicAlertOverlay");
+	if (alertOverlay && alertOverlay.classList.contains("is-open")) {
+		if (e.key === "Escape") { e.preventDefault(); closeClassicDialog(false); }
+		else if (e.key === "Enter") { e.preventDefault(); closeClassicDialog(true); }
+		return;
+	}
+});
+
+/**
+ * ============================================================================
+ * 6. VIEW 1 LOGIC: HEADER FALLBACK, EXACT 2-BANK / BRANCH RULES & VERIFICATION
+ * ============================================================================
+ */
+function showHeaderFallback() {
+	var img = document.getElementById("headerBannerImg");
+	var fallback = document.getElementById("headerBannerFallback");
+	if (img) img.style.display = "none";
+	if (fallback) fallback.style.display = "block";
+}
+
+function getSelectedDepositMode() {
+	var radios = document.getElementsByName("rdoDepositedIn");
+	for (var i = 0; i < radios.length; i++) {
+		if (radios[i].checked) return radios[i].value;
+	}
+	return "Cash";
+}
+
+function getBranchesForBankAndMode(bankIdentifier, depositMode) {
+	// e-Payment ALWAYS restricts Branch dropdown to ONLY 1 option: Local Office,Dhaka
+	if (depositMode === "e-Payment") {
+		return EPAYMENT_ONLY_BRANCH;
+	}
+	if (bankIdentifier === "2" || bankIdentifier === "Sonali Bank") {
+		return SONALI_BANK_BRANCHES;
+	}
+	return BANGLADESH_BANK_BRANCHES;
+}
+
+function listBankBranch() {
+	try {
+		var bankSelect = document.getElementById("cboBank");
+		var bankId = bankSelect ? bankSelect.value : "1";
+		var depositMode = getSelectedDepositMode();
+		var branches = getBranchesForBankAndMode(bankId, depositMode);
+
+		var html = '<select id="cboBankBranch" name="cboBankBranch" class="classic-select" style="width: 148px;">';
+		for (var i = 0; i < branches.length; i++) {
+			html += '<option value="' + escapeHtml(branches[i]) + '">' + escapeHtml(branches[i]) + '</option>';
+		}
+		html += '</select>';
+		document.getElementById("dvBankBranch").innerHTML = html;
+	} catch (err) {
+		showClassicDialog("Action Failed, Please try again...");
+	}
+}
+
+function clearVerifyMessages() {
+	var r1 = document.getElementById("dvManualResult");
+	var r2 = document.getElementById("dvResult");
+	if (r1) r1.innerHTML = "";
+	if (r2) r2.innerHTML = "";
+}
+
+function renderNotFoundInline(containerId, enteredNo) {
+	var container = document.getElementById(containerId);
+	if (!container) return;
+	container.innerHTML =
+		'<div class="inline-msg-box">' +
+			'No Chalan found for <strong>' + escapeHtml(enteredNo) + '</strong>' +
+		'</div>';
+}
+
+function verifyChalan() {
+	clearVerifyMessages();
+	var branchEl = document.getElementById("cboBankBranch");
+	var bank_branch_id = branchEl ? branchEl.value.trim() : "";
+	if (bank_branch_id.length === 0) {
+		showClassicDialog("Please select a bank branch.");
+		return;
+	}
+
+	var chalan_date = document.getElementById("txtChalanDate").value.trim();
+	if (chalan_date.length < 8) {
+		showClassicDialog("Please enter a valid date.");
+		return;
+	}
+
+	var chalan_no = document.getElementById("txtChalanNo").value.trim();
+	if (chalan_no.length < 1) {
+		showClassicDialog("Please enter a Chalan number.");
+		return;
+	}
+
+	var found = findChalanRecord(chalan_no);
+	if (found) {
+		navigateTo("details", found.challanNo);
+	} else {
+		renderNotFoundInline("dvManualResult", chalan_no);
+	}
+}
+
+function verifyAutoChalan() {
+	clearVerifyMessages();
+	var prefix = document.getElementById("txtAutoPrefix").value.trim();
+	var serial = document.getElementById("txtAutoChalanNo").value.trim();
+
+	if (prefix.length < 1 && serial.length < 1) {
+		showClassicDialog("Please enter a Chalan number.");
+		return;
+	}
+
+	var combined = prefix && serial ? (prefix + "-" + serial) : (prefix || serial);
+	var found = findChalanRecord(combined, serial);
+	if (found) {
+		navigateTo("details", found.challanNo);
+	} else {
+		renderNotFoundInline("dvResult", combined);
+	}
+}
+
+/**
+ * ============================================================================
+ * 7. LEGACY POPUP CALENDAR IMPLEMENTATION (VERBATIM CSS CLASSES)
+ * ============================================================================
+ */
+var activeDateInput = null;
+var selectedCalendarDate = null;
+
+function initCalendarYears() {
+	var yearSelect = document.getElementById("selectYear");
+	if (!yearSelect || yearSelect.options.length > 0) return;
+	var currentYear = new Date().getFullYear();
+	var endYear = Math.max(currentYear + 5, 2032);
+	for (var y = 2005; y <= endYear; y++) {
+		var opt = document.createElement("option");
+		opt.value = y;
+		opt.text = y;
+		yearSelect.appendChild(opt);
+	}
+}
+
+function parseInputDate(val) {
+	if (!val) return null;
+	var parts = toEnglishDigits(val).trim().split(/[-\/]/);
+	if (parts.length !== 3) return null;
+	var d, m, y;
+	if (parts[0].length === 4) {
+		y = parseInt(parts[0], 10);
+		m = parseInt(parts[1], 10) - 1;
+		d = parseInt(parts[2], 10);
+	} else {
+		d = parseInt(parts[0], 10);
+		m = parseInt(parts[1], 10) - 1;
+		y = parseInt(parts[2], 10);
+	}
+	if (isNaN(d) || isNaN(m) || isNaN(y) || m < 0 || m > 11 || d < 1 || d > 31) return null;
+	return { year: y, month: m, day: d };
+}
+
+function showCalender(inputElem, evt) {
+	if (evt) evt.stopPropagation();
+	initCalendarYears();
+	activeDateInput = inputElem;
+
+	var parsed = parseInputDate(inputElem.value);
+	selectedCalendarDate = parsed;
+	var now = new Date();
+	var displayYear = parsed ? parsed.year : now.getFullYear();
+	var displayMonth = parsed ? parsed.month : now.getMonth();
+
+	var monthSelect = document.getElementById("selectMonth");
+	var yearSelect = document.getElementById("selectYear");
+	monthSelect.selectedIndex = displayMonth;
+
+	for (var i = 0; i < yearSelect.options.length; i++) {
+		if (parseInt(yearSelect.options[i].value, 10) === displayYear) {
+			yearSelect.selectedIndex = i;
+			break;
+		}
+	}
+
+	showCalenderBody(createCalender(displayYear, displayMonth, false));
+
+	var rect = inputElem.getBoundingClientRect();
+	var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+	var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+	var calTable = document.getElementById("calenderTable");
+	calTable.style.left = Math.round(rect.left + scrollLeft) + "px";
+	calTable.style.top = Math.round(rect.bottom + scrollTop + 1) + "px";
+	calTable.style.display = "block";
+}
+
+function closeCalender() {
+	var calTable = document.getElementById("calenderTable");
+	if (calTable) calTable.style.display = "none";
+}
+
+function createCalender(year, month) {
+	var parsedYear = parseInt(year, 10);
+	var parsedMonth = parseInt(month, 10);
+	var firstDayOfWeek = new Date(parsedYear, parsedMonth, 1).getDay();
+	var daysInMonth = new Date(parsedYear, parsedMonth + 1, 0).getDate();
+
+	var today = new Date();
+	var todayY = today.getFullYear(), todayM = today.getMonth(), todayD = today.getDate();
+
+	var weeks = [], currentWeek = [];
+	for (var b = 0; b < firstDayOfWeek; b++) currentWeek.push(null);
+
+	for (var dateNum = 1; dateNum <= daysInMonth; dateNum++) {
+		var cellClass = "normalDay";
+		if (parsedYear === todayY && parsedMonth === todayM && dateNum === todayD) {
+			cellClass = "toDay";
+		}
+		if (
+			selectedCalendarDate &&
+			selectedCalendarDate.year === parsedYear &&
+			selectedCalendarDate.month === parsedMonth &&
+			selectedCalendarDate.day === dateNum
+		) {
+			cellClass = "choosenDay";
+		}
+		currentWeek.push({ year: parsedYear, month: parsedMonth, day: dateNum, baseClass: cellClass });
+		if (currentWeek.length === 7) {
+			weeks.push(currentWeek);
+			currentWeek = [];
+		}
+	}
+	if (currentWeek.length > 0) {
+		while (currentWeek.length < 7) currentWeek.push(null);
+		weeks.push(currentWeek);
+	}
+	return weeks;
+}
+
+function showCalenderBody(weeks) {
+	var tbody = document.getElementById("calender");
+	tbody.innerHTML = "";
+	for (var w = 0; w < weeks.length; w++) {
+		var tr = document.createElement("tr");
+		for (var d = 0; d < 7; d++) {
+			var td = document.createElement("td");
+			var cellData = weeks[w][d];
+			if (!cellData) {
+				td.innerHTML = "&nbsp;";
+			} else {
+				td.textContent = cellData.day;
+				td.className = cellData.baseClass;
+				td.setAttribute("data-base-class", cellData.baseClass);
+				(function(cell, tdEl) {
+					tdEl.onmouseover = function() { tdEl.className = "hlDay"; };
+					tdEl.onmouseout = function() { tdEl.className = tdEl.getAttribute("data-base-class"); };
+					tdEl.onclick = function(e) {
+						if (e) e.stopPropagation();
+						selectCalendarDay(cell.year, cell.month, cell.day);
+					};
+				})(cellData, td);
+			}
+			tr.appendChild(td);
+		}
+		tbody.appendChild(tr);
+	}
+}
+
+function selectCalendarDay(year, month, day) {
+	var dd = (day < 10 ? "0" : "") + day;
+	var mm = (month + 1 < 10 ? "0" : "") + (month + 1);
+	if (activeDateInput) activeDateInput.value = dd + "-" + mm + "-" + year;
+	selectedCalendarDate = { year: year, month: month, day: day };
+	closeCalender();
+}
+
+document.addEventListener("click", function(e) {
+	var calTable = document.getElementById("calenderTable");
+	var dateInput = document.getElementById("txtChalanDate");
+	if (!calTable || calTable.style.display !== "block") return;
+	if (!calTable.contains(e.target) && e.target !== dateInput) {
+		closeCalender();
+	}
+});
+
+/**
+ * ============================================================================
+ * 8. VIEW 2 LOGIC: 3-COPY T.R. FORM NO. 6(4), STATIC HIGH-DENSITY 74x52 QR &
+ *    PDF417, AND BULLETPROOF IN-PLACE + DIRECT-STAMPED A4 PDF DOWNLOAD
+ * ============================================================================
+ */
+
+/**
+ * Generates real PDF417 barcode via bwip-js onto an offscreen canvas with white
+ * background, with an immediate built-in pure-JS stacked 2D barcode fallback.
+ */
+function generatePdf417PngDataUrl(textPayload) {
+	var canvas = document.createElement("canvas");
+
+	if (typeof window.bwipjs !== "undefined" && typeof window.bwipjs.toCanvas === "function") {
+		try {
+			window.bwipjs.toCanvas(canvas, {
+				bcid: "pdf417",
+				text: textPayload,
+				scale: 3,
+				height: 7,
+				columns: 8,
+				eclevel: 2,
+				includetext: false,
+				backgroundcolor: "ffffff",
+				barcolor: "000000",
+				paddingwidth: 0,
+				paddingheight: 0
+			});
+			return canvas.toDataURL("image/png");
+		} catch (e) {}
+	}
+
+	// Built-in pure-JS high-density stacked 2D barcode canvas fallback
+	canvas.width = 340;
+	canvas.height = 46;
+	var ctx = canvas.getContext("2d");
+	ctx.fillStyle = "#FFFFFF";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle = "#000000";
+
+	var startPattern = [7, 1, 1, 1, 1, 1, 1, 2];
+	var sx = 2;
+	for (var s = 0; s < startPattern.length; s++) {
+		if (s % 2 === 0) ctx.fillRect(sx, 2, startPattern[s], 42);
+		sx += startPattern[s];
+	}
+	var stopPattern = [6, 1, 1, 2, 1, 1, 1, 2, 1];
+	var ex = canvas.width - 20;
+	for (var e = 0; e < stopPattern.length; e++) {
+		if (e % 2 === 0) ctx.fillRect(ex, 2, stopPattern[e], 42);
+		ex += stopPattern[e];
+	}
+
+	var hash = 2166136261;
+	for (var i = 0; i < textPayload.length; i++) {
+		hash ^= textPayload.charCodeAt(i);
+		hash = Math.imul(hash, 16777619) >>> 0;
+	}
+	var rows = 10;
+	var rowH = 4;
+	for (var r = 0; r < rows; r++) {
+		for (var cx = 19; cx < canvas.width - 22; cx += 2) {
+			hash = (Math.imul(hash ^ (r * 37 + cx * 13), 1664525) + 1013904223) >>> 0;
+			if ((hash >>> 24) % 2 === 0) {
+				ctx.fillRect(cx, 3 + r * rowH, 2, rowH);
+			}
+		}
+	}
+	return canvas.toDataURL("image/png");
+}
+
+function renderDetailsView(challanNo) {
+	var sheet = document.getElementById("chalanSheet");
+	var actionBar = document.getElementById("detailsActionBar");
+
+	var record = findChalanRecord(challanNo);
+	currentActiveChalan = record;
+
+	if (!record) {
+		if (actionBar) actionBar.style.display = "none";
+		window.__chalanMedia = { qrs: [], barcodes: [] };
+		sheet.innerHTML =
+			'<div class="details-not-found">' +
+				'<h3 style="margin:0 0 8px 0; color:#9E1B1B;">Chalan Record Not Found</h3>' +
+				'<p style="margin:0 0 16px 0; font-size:13px;">No verified chalan record was found for <strong>' + escapeHtml(challanNo || "(empty)") + '</strong>.</p>' +
+				'<div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">' +
+					'<button type="button" class="admin-btn admin-btn-secondary" onclick="navigateTo(\'verify\')">&larr; Back to Verification</button>' +
+					'<button type="button" class="admin-btn admin-btn-primary" onclick="openAdminWithPrefill(\'' + escapeHtml(challanNo || "") + '\')">+ Add Chalan in Admin</button>' +
+				'</div>' +
+			'</div>';
+		return;
+	}
+
+	if (actionBar) actionBar.style.display = "flex";
+
+	// QR encodes MAIN PORTAL URL with ?challanNo=<challanNo>
+	var qrUrl = buildQrVerificationUrl(record.challanNo);
+
+	var depositorOneLine = String(record.depositedBy || "").split(/\r?\n/)[0].trim();
+	var pdf417Data =
+		"ChallanNo:" + record.challanNo +
+		"|Date:" + (record.dateEn || toEnglishDigits(record.dateBn)) +
+		"|Amount:" + (record.amountEn || toEnglishDigits(record.amountBn)) +
+		"|Code:" + toEnglishDigits(record.economicCode) +
+		"|Bank:" + (record.bankName || "") + "," + (record.branchName || "") +
+		"|Name:" + depositorOneLine;
+
+	// Generate crisp 6x high-density rectangular 468x330 (78x55) #54F6FF QR PNG
+	var qrPngDataUrl = PureQR.toCyanPngDataUrl(qrUrl, 468, 330);
+	var pdf417PngDataUrl = generatePdf417PngDataUrl(pdf417Data);
+
+	// Cache exact PNG data URLs for guaranteed direct jsPDF overlay stamping
+	window.__chalanMedia = {
+		qrs: [qrPngDataUrl, qrPngDataUrl, qrPngDataUrl],
+		barcodes: [pdf417PngDataUrl, pdf417PngDataUrl, pdf417PngDataUrl]
+	};
+
+	var copies = [
+		{
+			idx: 0,
+			title: "ব্যাংকের কপি",
+			qrCaption: "চালান ভেরিফিকেশন QR কোড"
+		},
+		{
+			idx: 1,
+			title: "গ্রাহকের কপি",
+			qrCaption: "চালান ভেরিফিকেশন QR কোড"
+		},
+		{
+			idx: 2,
+			title: record.copy3Title || (record.govInstitution + "-এর কপি"),
+			qrCaption: "চালান ভেরিফিকেশন QR কোড"
+		}
+	];
+
+	var html = "";
+
+	for (var c = 0; c < copies.length; c++) {
+		var copy = copies[c];
+		html +=
+			'<div class="chalan-copy-block">' +
+				'<table class="copy-header-table" cellpadding="0" cellspacing="0">' +
+					'<tr>' +
+						'<td class="copy-header-left">' +
+							'<div class="copy-title-text">' + nl2brEscaped(copy.title) + '</div>' +
+							'<div class="copy-tr-text">টি.আর. ফরম নং-৬ (৪)</div>' +
+							'<div class="copy-tr-text">(এস আর অনুচ্ছেদ ৩৭ দ্রষ্টব্য)</div>' +
+						'</td>' +
+						'<td class="copy-header-center">' +
+							'<div class="copy-header-center-inner">' +
+								'<div class="copy-form-heading">চালান ফরম</div>' +
+								'<div class="copy-bank-line">' + escapeHtml(record.bankHeaderLine) + '</div>' +
+							'</div>' +
+						'</td>' +
+						'<td class="copy-header-right">' +
+							'<div class="qr-wrap-inline">' +
+								'<div class="qr-cyan-box">' +
+									'<img class="qr-img" data-copy-idx="' + copy.idx + '" src="' + qrPngDataUrl + '" width="78" height="55" draggable="false" alt="Chalan Verification QR Code">' +
+								'</div>' +
+								'<div class="qr-caption-text">' + escapeHtml(copy.qrCaption) + '</div>' +
+							'</div>' +
+						'</td>' +
+					'</tr>' +
+				'</table>' +
+
+				'<table class="tr-main-table" cellpadding="0" cellspacing="0">' +
+					'<colgroup>' +
+						'<col style="width:14.5%;">' +
+						'<col style="width:24.5%;">' +
+						'<col style="width:24.5%;">' +
+						'<col style="width:12%;">' +
+						'<col style="width:14%;">' +
+						'<col style="width:10.5%;">' +
+					'</colgroup>' +
+					'<thead>' +
+						'<tr>' +
+							'<th>যে সরকারি প্রতিষ্ঠানের অনুকূলে অর্থ জমা হচ্ছে</th>' +
+							'<th>যার মাধ্যমে টাকা প্রদত্ত হলো তার নাম, সনাক্তকরণ নম্বর ও ঠিকানা</th>' +
+							'<th>যে ব্যক্তির/প্রতিষ্ঠানের পক্ষ হতে টাকা প্রদত্ত হলো তার নাম, সনাক্তকরণ নম্বর ও ঠিকানা</th>' +
+							'<th>চালান নং</th>' +
+							'<th>কি বাবদ জমা দেওয়া হলো তার বিবরণ</th>' +
+							'<th>জমার পরিমাণ</th>' +
+						'</tr>' +
+					'</thead>' +
+					'<tbody>' +
+						'<tr>' +
+							'<td><div class="tr-body-cell-inner">' + nl2brEscaped(record.govInstitution) + '</div></td>' +
+							'<td><div class="tr-body-cell-inner">' + nl2brEscaped(record.depositedBy) + '</div></td>' +
+							'<td><div class="tr-body-cell-inner">' + nl2brEscaped(record.behalfOf) + '</div></td>' +
+							'<td><div class="tr-body-cell-inner">' + escapeHtml(record.challanNoDisplayBn || toBengaliDigits(record.challanNo)) + '</div></td>' +
+							'<td><div class="tr-body-cell-inner">' + nl2brEscaped(record.purpose) + '</div></td>' +
+							'<td class="tr-amount-cell"><div class="tr-body-cell-inner">' + escapeHtml(record.amountBn || toBengaliDigits(record.amountEn)) + '</div></td>' +
+						'</tr>' +
+					'</tbody>' +
+				'</table>' +
+
+				'<table class="copy-footer-table" cellpadding="0" cellspacing="0">' +
+					'<tr>' +
+						'<td class="copy-footer-left">' +
+							'<div class="copy-code-remarks">' +
+								'নতুন কোড: ' + escapeHtml(record.economicCode) +
+								' অন্যান্য বিবরণ/মন্তব্য (যদি থাকে): ' + escapeHtml(record.remarks) +
+							'</div>' +
+							'<div class="pdf417-holder">' +
+								'<img class="barcode-img" data-copy-idx="' + copy.idx + '" src="' + pdf417PngDataUrl + '" width="282" height="29" draggable="false" alt="Chalan PDF417 Barcode">' +
+							'</div>' +
+						'</td>' +
+						'<td class="copy-footer-right">' +
+							'<div class="copy-total-line">মোট (অংকে) = ' + escapeHtml(record.amountBn || toBengaliDigits(record.amountEn)) + '</div>' +
+							'<div>টাকা (কথায়): ' + escapeHtml(record.amountWordsBn) + '</div>' +
+							'<div class="copy-date-line">তারিখ: ' + escapeHtml(record.dateBn) + '</div>' +
+							'<div class="copy-sys-note">এটি একটি সিস্টেম জেনারেটেড চালান, কোন স্বাক্ষর প্রয়োজন নেই।</div>' +
+						'</td>' +
+					'</tr>' +
+				'</table>' +
+				'<hr class="chalan-cut-divider">' +
+			'</div>';
+	}
+
+	sheet.innerHTML = html;
+}
+
+/**
+ * Waits for all embedded <img> elements inside a node to finish loading & decoding.
+ */
+function waitForImagesInElement(rootEl) {
+	var imgs = Array.prototype.slice.call(rootEl.querySelectorAll("img"));
+	return Promise.all(imgs.map(function(img) {
+		if (img.complete && img.naturalWidth > 0) {
+			return typeof img.decode === "function" ? img.decode().catch(function() {}) : Promise.resolve();
+		}
+		return new Promise(function(resolve) {
+			img.onload = function() {
+				if (typeof img.decode === "function") {
+					img.decode().catch(function() {}).then(resolve);
+				} else {
+					resolve();
+				}
+			};
+			img.onerror = function() { resolve(); };
+		});
+	}));
+}
+
+/**
+ * BULLETPROOF IN-PLACE PDF EXPORT WITH DIRECT QR (78:55) & BARCODE STAMP OVERLAY:
+ * Captures #chalanSheet directly in place at 3x resolution and stamps all 3 cached
+ * 468x330 #45E5F4 QR PNGs and all 3 PDF417 PNGs at each element's exact live bounding box.
+ */
+async function downloadChalanPDF() {
+	if (!currentActiveChalan) return;
+	var filename = (currentActiveChalan.challanNo || "chalan") + ".pdf";
+	var sheetEl = document.getElementById("chalanSheet");
+	var btn = document.getElementById("btnDownloadPdf");
+
+	var jsPdfCtor = window.jspdf && window.jspdf.jsPDF;
+	if (typeof window.html2canvas !== "function" || typeof jsPdfCtor !== "function") {
+		showToast("PDF libraries unavailable — opening Print dialog to Save as PDF...");
+		window.print();
+		return;
+	}
+
+	try {
+		if (btn) btn.disabled = true;
+		showToast("Generating " + filename + "...");
+
+		if (document.fonts && document.fonts.ready) {
+			await document.fonts.ready;
+		}
+		await waitForImagesInElement(sheetEl);
+
+		window.scrollTo(0, 0);
+
+		// Measure live bounding boxes relative to #chalanSheet
+		var sheetRect = sheetEl.getBoundingClientRect();
+		var qrBoxes = [];
+		var qrImgs = sheetEl.querySelectorAll(".qr-img");
+		for (var i = 0; i < qrImgs.length; i++) {
+			var qrRect = qrImgs[i].getBoundingClientRect();
+			var qrIdx = parseInt(qrImgs[i].getAttribute("data-copy-idx"), 10);
+			if (isNaN(qrIdx)) qrIdx = i;
+			qrBoxes.push({
+				idx: qrIdx,
+				relX: (qrRect.left - sheetRect.left) / sheetRect.width,
+				relY: (qrRect.top - sheetRect.top) / sheetRect.height,
+				relW: qrRect.width / sheetRect.width,
+				relH: qrRect.height / sheetRect.height
+			});
+		}
+
+		var barcodeBoxes = [];
+		var bcImgs = sheetEl.querySelectorAll(".barcode-img");
+		for (var j = 0; j < bcImgs.length; j++) {
+			var bcRect = bcImgs[j].getBoundingClientRect();
+			var bcIdx = parseInt(bcImgs[j].getAttribute("data-copy-idx"), 10);
+			if (isNaN(bcIdx)) bcIdx = j;
+			barcodeBoxes.push({
+				idx: bcIdx,
+				relX: (bcRect.left - sheetRect.left) / sheetRect.width,
+				relY: (bcRect.top - sheetRect.top) / sheetRect.height,
+				relW: bcRect.width / sheetRect.width,
+				relH: bcRect.height / sheetRect.height
+			});
+		}
+
+		// Capture #chalanSheet directly in place at crisp 3x scale
+		var sheetCanvas = await window.html2canvas(sheetEl, {
+			scale: 3,
+			backgroundColor: "#ffffff",
+			useCORS: true,
+			allowTaint: true,
+			logging: false,
+			scrollX: 0,
+			scrollY: 0,
+			windowWidth: document.documentElement.scrollWidth
+		});
+
+		// Fit proportionally on 1 Portrait A4 page (210mm x 297mm)
+		var pdf = new jsPdfCtor({
+			orientation: "portrait",
+			unit: "mm",
+			format: "a4"
+		});
+
+		var pageW = 210;
+		var pageH = 297;
+		var marginX = 10;
+		var marginY = 8;
+		var maxW = pageW - marginX * 2;
+		var maxH = pageH - marginY * 2;
+
+		var ratio = Math.min(maxW / sheetCanvas.width, maxH / sheetCanvas.height);
+		var drawW = sheetCanvas.width * ratio;
+		var drawH = sheetCanvas.height * ratio;
+		var offsetX = (pageW - drawW) / 2;
+		var offsetY = marginY;
+
+		// Step A: Draw captured sheet
+		pdf.addImage(sheetCanvas.toDataURL("image/png"), "PNG", offsetX, offsetY, drawW, drawH);
+
+		// Step B: Direct guaranteed PNG stamp for all 3 78:55 #54F6FF QR codes
+		var cachedQrs = (window.__chalanMedia && window.__chalanMedia.qrs) || [];
+		for (var q = 0; q < qrBoxes.length; q++) {
+			var qBox = qrBoxes[q];
+			var qrDataUrl = cachedQrs[qBox.idx] || cachedQrs[0];
+			if (qrDataUrl) {
+				pdf.addImage(
+					qrDataUrl,
+					"PNG",
+					offsetX + qBox.relX * drawW,
+					offsetY + qBox.relY * drawH,
+					qBox.relW * drawW,
+					qBox.relH * drawH
+				);
+			}
+		}
+
+		// Step C: Direct guaranteed PNG stamp for all 3 PDF417 barcodes
+		var cachedBarcodes = (window.__chalanMedia && window.__chalanMedia.barcodes) || [];
+		for (var b = 0; b < barcodeBoxes.length; b++) {
+			var bBox = barcodeBoxes[b];
+			var bcDataUrl = cachedBarcodes[bBox.idx] || cachedBarcodes[0];
+			if (bcDataUrl) {
+				pdf.addImage(
+					bcDataUrl,
+					"PNG",
+					offsetX + bBox.relX * drawW,
+					offsetY + bBox.relY * drawH,
+					bBox.relW * drawW,
+					bBox.relH * drawH
+				);
+			}
+		}
+
+		pdf.save(filename);
+		showToast("Downloaded " + filename);
+	} catch (err) {
+		showToast("Direct PDF export failed — opening Print dialog.");
+		window.print();
+	} finally {
+		if (btn) btn.disabled = false;
+	}
+}
+
+/**
+ * ============================================================================
+ * 9. VIEW 3 LOGIC: ADMIN MANUAL ENTRY, DUPLICATE, CRUD & 2-BANK RULES
+ * ============================================================================
+ */
+function renderAdminView() {
+	var qrInput = document.getElementById("admQrBaseUrl");
+	if (qrInput) qrInput.value = getQrBaseUrl();
+	updateQrUrlHint();
+	syncAdminBankBranches();
+	renderAdminTable();
+
+	if (!document.getElementById("admPrefix").value && !document.getElementById("admSerial").value) {
+		loadDemoSampleIntoForm(true);
+	}
+}
+
+function getSelectedAdminChalanNo() {
+	var prefix = toEnglishDigits(document.getElementById("admPrefix").value).trim();
+	var serial = toEnglishDigits(document.getElementById("admSerial").value).trim();
+	if (prefix && serial) {
+		var combined = prefix + "-" + serial;
+		var match = findChalanRecord(combined, serial);
+		if (match) return match.challanNo;
+	}
+	var all = loadAllChalans();
+	return all.length > 0 ? all[0].challanNo : "";
+}
+
+function previewSelectedAdminChalan() {
+	var target = getSelectedAdminChalanNo();
+	if (target) {
+		navigateTo("details", target);
+	} else {
+		showClassicDialog("No saved chalan found to preview.");
+	}
+}
+
+function previewSelectedAdminQrFlow() {
+	var target = getSelectedAdminChalanNo();
+	if (target) {
+		navigateTo("verify", target);
+	} else {
+		showClassicDialog("No saved chalan found to test QR flow.");
+	}
+}
+
+function openAdminWithPrefill(enteredNo) {
+	navigateTo("admin");
+	resetAdminForm();
+	var cleaned = toEnglishDigits(enteredNo).trim();
+	if (cleaned.indexOf("-") !== -1) {
+		var parts = cleaned.split("-");
+		document.getElementById("admPrefix").value = parts[0];
+		document.getElementById("admSerial").value = parts.slice(1).join("-");
+	} else {
+		document.getElementById("admPrefix").value = "2627";
+		document.getElementById("admSerial").value = cleaned;
+	}
+	syncChalanNoBengali();
+}
+
+function updateQrUrlHint() {
+	var hint = document.getElementById("qrBaseUrlPreviewHint");
+	if (!hint) return;
+	var preview = buildQrVerificationUrl("2627-0009880470");
+	hint.innerHTML = "Encoded QR URL (opens Main Portal &amp; auto-fills boxes): <code>" + escapeHtml(preview) + "</code>";
+}
+
+function saveQrBaseUrlSetting() {
+	var val = document.getElementById("admQrBaseUrl").value.trim();
+	try {
+		localStorage.setItem(STORAGE_KEY_QR_BASE, val);
+	} catch (e) {}
+	updateQrUrlHint();
+	showToast(val ? "Custom QR Base URL saved." : "QR Base URL set to auto-detect.");
+}
+
+function resetQrBaseUrlSetting() {
+	document.getElementById("admQrBaseUrl").value = "";
+	saveQrBaseUrlSetting();
+}
+
+function syncChalanNoBengali() {
+	var prefix = document.getElementById("admPrefix").value.trim();
+	var serial = document.getElementById("admSerial").value.trim();
+	var combined = prefix && serial ? (prefix + "-" + serial) : (prefix || serial);
+	document.getElementById("admChalanNoBn").value = toBengaliDigits(combined);
+}
+
+function syncDateBengali() {
+	var pickerVal = document.getElementById("admDatePicker").value;
+	if (!pickerVal) return;
+	var p = pickerVal.split("-");
+	if (p.length === 3) {
+		var formatted = p[2] + "/" + p[1] + "/" + p[0];
+		document.getElementById("admDateBn").value = toBengaliDigits(formatted) + " খ্রি.";
+	}
+}
+
+function syncCopy3Title() {
+	var inst = document.getElementById("admGovInstitution").value.trim();
+	document.getElementById("admCopy3Title").value = inst ? (inst + "-এর কপি") : "";
+}
+
+function syncAmountBengali() {
+	var raw = document.getElementById("admAmountEn").value.trim();
+	var formattedEn = formatSouthAsianNumber(raw);
+	if (formattedEn) {
+		document.getElementById("admAmountBn").value = toBengaliDigits(formattedEn);
+		document.getElementById("admAmountWordsBn").value = amountToBengaliWords(raw);
+	}
+}
+
+function autoFillBengaliWords() {
+	var raw = document.getElementById("admAmountEn").value.trim() || document.getElementById("admAmountBn").value.trim();
+	var words = amountToBengaliWords(raw);
+	if (!words) {
+		showClassicDialog("Please enter a valid numeric amount first.");
+		return;
+	}
+	document.getElementById("admAmountWordsBn").value = words;
+	showToast("Converted amount to Bengali words.");
+}
+
+function syncAdminBankBranches(preferredBranch) {
+	var bankName = document.getElementById("admBankName").value;
+	var depositMode = document.getElementById("admDepositMode").value;
+	var branchSelect = document.getElementById("admBranchName");
+	if (!branchSelect) return;
+
+	var prev = preferredBranch || branchSelect.value;
+	var branches = getBranchesForBankAndMode(bankName, depositMode);
+
+	var html = "";
+	for (var i = 0; i < branches.length; i++) {
+		html += '<option value="' + escapeHtml(branches[i]) + '">' + escapeHtml(branches[i]) + '</option>';
+	}
+	branchSelect.innerHTML = html;
+
+	if (prev && branches.indexOf(prev) !== -1) {
+		branchSelect.value = prev;
+	} else if (branches.length > 0) {
+		branchSelect.value = branches[0];
+	}
+
+	var hint = document.getElementById("admBranchHint");
+	if (hint) {
+		hint.textContent = depositMode === "e-Payment"
+			? "e-Payment active: only 1 branch (Local Office,Dhaka) is available."
+			: ("Showing " + branches.length + " branches for " + bankName + ".");
+	}
+}
+
+function loadDemoSampleIntoForm(silent) {
+	fillAdminForm(DEFAULT_CHALAN_RECORD, false);
+	if (!silent) showToast("Demo chalan sample loaded into form.");
+}
+
+function resetAdminForm() {
+	document.getElementById("admEditingOriginalNo").value = "";
+	document.getElementById("adminFormHeading").textContent = "Add New Chalan Record (নতুন চালান যুক্ত করুন)";
+	document.getElementById("adminEditBadge").style.display = "none";
+
+	var ids = [
+		"admPrefix", "admSerial", "admChalanNoBn", "admDatePicker", "admDateBn",
+		"admBankHeaderLine", "admGovInstitution", "admCopy3Title",
+		"admDepositedBy", "admBehalfOf", "admPurpose", "admEconomicCode",
+		"admRemarks", "admAmountEn", "admAmountBn", "admAmountWordsBn"
+	];
+	for (var i = 0; i < ids.length; i++) {
+		var el = document.getElementById(ids[i]);
+		if (el) el.value = "";
+	}
+	document.getElementById("admDepositMode").value = "Cash";
+	document.getElementById("admBankName").value = "Bangladesh Bank";
+	syncAdminBankBranches();
+}
+
+function fillAdminForm(rec, isEditMode) {
+	document.getElementById("admEditingOriginalNo").value = isEditMode ? rec.challanNo : "";
+	document.getElementById("adminFormHeading").textContent = isEditMode
+		? ("Edit Chalan Record: " + rec.challanNo)
+		: "Add New Chalan Record (নতুন চালান যুক্ত করুন)";
+	document.getElementById("adminEditBadge").style.display = isEditMode ? "inline-block" : "none";
+
+	var parts = String(rec.challanNo || "").split("-");
+	document.getElementById("admPrefix").value = parts.length > 1 ? parts[0] : "";
+	document.getElementById("admSerial").value = parts.length > 1 ? parts.slice(1).join("-") : (parts[0] || "");
+	document.getElementById("admChalanNoBn").value = rec.challanNoDisplayBn || "";
+
+	var dParts = toEnglishDigits(rec.dateEn || "").split(/[\/\-]/);
+	if (dParts.length === 3 && dParts[2].length === 4) {
+		document.getElementById("admDatePicker").value = dParts[2] + "-" + dParts[1].padStart(2, "0") + "-" + dParts[0].padStart(2, "0");
+	} else {
+		document.getElementById("admDatePicker").value = "";
+	}
+	document.getElementById("admDateBn").value = rec.dateBn || "";
+
+	var bankNormalized = (rec.bankName && rec.bankName.indexOf("Bangladesh") !== -1) ? "Bangladesh Bank" : "Sonali Bank";
+	document.getElementById("admDepositMode").value = rec.depositMode || "e-Payment";
+	document.getElementById("admBankName").value = bankNormalized;
+	syncAdminBankBranches(rec.branchName || "Local Office,Dhaka");
+
+	document.getElementById("admBankHeaderLine").value = rec.bankHeaderLine || "";
+	document.getElementById("admGovInstitution").value = rec.govInstitution || "";
+	document.getElementById("admCopy3Title").value = rec.copy3Title || "";
+	document.getElementById("admDepositedBy").value = rec.depositedBy || "";
+	document.getElementById("admBehalfOf").value = rec.behalfOf || "";
+	document.getElementById("admPurpose").value = rec.purpose || "";
+	document.getElementById("admEconomicCode").value = rec.economicCode || "";
+	document.getElementById("admRemarks").value = rec.remarks || "";
+	document.getElementById("admAmountEn").value = rec.amountEn || "";
+	document.getElementById("admAmountBn").value = rec.amountBn || "";
+	document.getElementById("admAmountWordsBn").value = rec.amountWordsBn || "";
+}
+
+function handleAdminSave(openAfterSave) {
+	var prefix = toEnglishDigits(document.getElementById("admPrefix").value).trim();
+	var serial = toEnglishDigits(document.getElementById("admSerial").value).trim();
+	if (!prefix || !serial) {
+		showClassicDialog("Please enter both Chalan Prefix and Serial No.");
+		return;
+	}
+
+	var challanNo = prefix + "-" + serial;
+	var pickerVal = document.getElementById("admDatePicker").value;
+	var dateEn = "";
+	if (pickerVal) {
+		var dp = pickerVal.split("-");
+		dateEn = dp[2] + "/" + dp[1] + "/" + dp[0];
+	}
+	var dateBn = document.getElementById("admDateBn").value.trim() || (dateEn ? toBengaliDigits(dateEn) + " খ্রি." : "");
+	if (!dateEn && dateBn) {
+		dateEn = toEnglishDigits(dateBn).replace(/[^\d\/\-]/g, "");
+	}
+
+	var rawAmt = document.getElementById("admAmountEn").value.trim();
+	var formattedAmtEn = formatSouthAsianNumber(rawAmt) || rawAmt || "0.00";
+	var amountBn = document.getElementById("admAmountBn").value.trim() || toBengaliDigits(formattedAmtEn);
+	var amountWordsBn = document.getElementById("admAmountWordsBn").value.trim() || amountToBengaliWords(formattedAmtEn);
+
+	var govInst = document.getElementById("admGovInstitution").value.trim();
+	var copy3 = document.getElementById("admCopy3Title").value.trim() || (govInst ? govInst + "-এর কপি" : "প্রতিষ্ঠানের কপি");
+
+	var bankName = document.getElementById("admBankName").value;
+	var branchName = document.getElementById("admBranchName").value;
+
+	var record = {
+		challanNo: challanNo,
+		challanNoDisplayBn: document.getElementById("admChalanNoBn").value.trim() || toBengaliDigits(challanNo),
+		bankName: bankName,
+		branchName: branchName,
+		bankHeaderLine: document.getElementById("admBankHeaderLine").value.trim() || (bankName + ", " + branchName + " শাখায় টাকা জমা দেওয়ার চালান"),
+		depositMode: document.getElementById("admDepositMode").value,
+		dateEn: dateEn,
+		dateBn: dateBn,
+		govInstitution: govInst,
+		copy3Title: copy3,
+		depositedBy: document.getElementById("admDepositedBy").value.trim(),
+		behalfOf: document.getElementById("admBehalfOf").value.trim(),
+		purpose: document.getElementById("admPurpose").value.trim(),
+		amountEn: formattedAmtEn,
+		amountBn: amountBn,
+		amountWordsBn: amountWordsBn,
+		economicCode: document.getElementById("admEconomicCode").value.trim(),
+		remarks: document.getElementById("admRemarks").value.trim()
+	};
+
+	var qrVal = document.getElementById("admQrBaseUrl").value.trim();
+	try { localStorage.setItem(STORAGE_KEY_QR_BASE, qrVal); } catch (e) {}
+
+	var list = loadAllChalans();
+	var editingKey = document.getElementById("admEditingOriginalNo").value.trim();
+	var existingIdx = -1;
+
+	for (var i = 0; i < list.length; i++) {
+		if ((editingKey && list[i].challanNo === editingKey) || list[i].challanNo === record.challanNo) {
+			existingIdx = i;
+			break;
+		}
+	}
+
+	if (existingIdx >= 0) {
+		list[existingIdx] = record;
+	} else {
+		list.unshift(record);
+	}
+
+	saveAllChalans(list);
+	renderAdminTable();
+	updateQrUrlHint();
+
+	if (openAfterSave) {
+		navigateTo("details", record.challanNo);
+	} else {
+		showToast("Saved Chalan " + record.challanNo + " successfully.");
+		fillAdminForm(record, true);
+	}
+}
+
+function renderAdminTable() {
+	var tbody = document.getElementById("adminRecordsTbody");
+	var badge = document.getElementById("savedCountBadge");
+	if (!tbody) return;
+
+	var list = loadAllChalans();
+	var query = (document.getElementById("admSearchBox") ? document.getElementById("admSearchBox").value : "").trim().toLowerCase();
+	var queryEn = toEnglishDigits(query);
+
+	var filtered = list.filter(function(rec) {
+		if (!query) return true;
+		var hay = [
+			rec.challanNo,
+			rec.challanNoDisplayBn,
+			rec.depositedBy,
+			rec.behalfOf,
+			rec.govInstitution,
+			rec.bankName,
+			rec.branchName,
+			rec.amountEn
+		].join(" ").toLowerCase();
+		return hay.indexOf(query) !== -1 || toEnglishDigits(hay).indexOf(queryEn) !== -1;
+	});
+
+	if (badge) badge.textContent = String(list.length);
+
+	if (filtered.length === 0) {
+		tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:18px; color:#666666;">No matching chalan records found.</td></tr>';
+		return;
+	}
+
+	var html = "";
+	for (var i = 0; i < filtered.length; i++) {
+		var r = filtered[i];
+		var shortName = String(r.depositedBy || r.behalfOf || "").split(/\r?\n/)[0];
+		var safeNo = escapeHtml(r.challanNo);
+		html +=
+			'<tr>' +
+				'<td>' +
+					'<strong>' + safeNo + '</strong>' +
+					'<div style="font-size:11px; color:#556644;">' + escapeHtml(r.challanNoDisplayBn || "") + '</div>' +
+				'</td>' +
+				'<td>' + escapeHtml(shortName) + '</td>' +
+				'<td style="white-space:nowrap;">' + escapeHtml(r.dateBn || r.dateEn || "") + '</td>' +
+				'<td>' + escapeHtml(r.bankName || "") + '<div style="font-size:11px; color:#556644;">' + escapeHtml(r.branchName || "") + ' (' + escapeHtml(r.depositMode || "") + ')</div></td>' +
+				'<td style="white-space:nowrap;"><strong>' + escapeHtml(r.amountBn || r.amountEn || "") + '</strong></td>' +
+				'<td style="white-space:nowrap;">' +
+					'<button type="button" class="admin-btn admin-btn-accent admin-btn-sm" onclick="navigateTo(\'details\', \'' + safeNo + '\')">View Chalan</button> ' +
+					'<button type="button" class="admin-btn admin-btn-primary admin-btn-sm" onclick="navigateTo(\'verify\', \'' + safeNo + '\')" title="Open Main Portal pre-filled via ?challanNo=...">QR Link</button> ' +
+					'<button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" onclick="editChalanRecord(\'' + safeNo + '\')">Edit</button> ' +
+					'<button type="button" class="admin-btn admin-btn-secondary admin-btn-sm" onclick="duplicateChalanRecord(\'' + safeNo + '\')">Copy</button> ' +
+					'<button type="button" class="admin-btn admin-btn-danger admin-btn-sm" onclick="confirmDeleteChalan(\'' + safeNo + '\')">Delete</button>' +
+				'</td>' +
+			'</tr>';
+	}
+	tbody.innerHTML = html;
+}
+
+function editChalanRecord(challanNo) {
+	var rec = findChalanRecord(challanNo);
+	if (!rec) return;
+	fillAdminForm(rec, true);
+	window.scrollTo({ top: 0, behavior: "smooth" });
+	showToast("Loaded " + challanNo + " for editing.");
+}
+
+function duplicateChalanRecord(challanNo) {
+	var rec = findChalanRecord(challanNo);
+	if (!rec) return;
+	var clone = Object.assign({}, rec);
+	var parts = String(clone.challanNo || "").split("-");
+	var prefix = parts.length > 1 ? parts[0] : "2627";
+	var serialNum = parseInt(parts.length > 1 ? parts[1] : parts[0], 10);
+	var newSerial = !isNaN(serialNum)
+		? String(serialNum + 1).padStart((parts[1] || parts[0]).length, "0")
+		: (String(Date.now()).slice(-10));
+	clone.challanNo = prefix + "-" + newSerial;
+	clone.challanNoDisplayBn = toBengaliDigits(clone.challanNo);
+	fillAdminForm(clone, false);
+	window.scrollTo({ top: 0, behavior: "smooth" });
+	showToast("Duplicated into form as " + clone.challanNo + " — click Save Chalan to store.");
+}
+
+function confirmDeleteChalan(challanNo) {
+	showClassicConfirm("Are you sure you want to delete Chalan " + challanNo + "?", function(confirmed) {
+		if (!confirmed) return;
+		var list = loadAllChalans().filter(function(r) { return r.challanNo !== challanNo; });
+		saveAllChalans(list);
+		renderAdminTable();
+		showToast("Deleted Chalan " + challanNo + ".");
+	});
+}
+
+function exportChalansJson() {
+	var data = loadAllChalans();
+	var blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+	var url = URL.createObjectURL(blob);
+	var a = document.createElement("a");
+	a.href = url;
+	a.download = "chalans_backup.json";
+	document.body.appendChild(a);
+	a.click();
+	document.body.removeChild(a);
+	setTimeout(function() { URL.revokeObjectURL(url); }, 1000);
+	showToast("Exported " + data.length + " chalan record(s) to JSON.");
+}
+
+function importChalansJson(evt) {
+	var file = evt.target.files && evt.target.files[0];
+	if (!file) return;
+	var reader = new FileReader();
+	reader.onload = function(e) {
+		try {
+			var imported = JSON.parse(e.target.result);
+			if (!Array.isArray(imported)) {
+				showClassicDialog("Invalid JSON format. Expected an array of chalan records.");
+				return;
+			}
+			var existing = loadAllChalans();
+			var mergedCount = 0;
+			for (var i = 0; i < imported.length; i++) {
+				var item = imported[i];
+				if (!item || !item.challanNo) continue;
+				var idx = -1;
+				for (var j = 0; j < existing.length; j++) {
+					if (existing[j].challanNo === item.challanNo) { idx = j; break; }
+				}
+				if (idx >= 0) existing[idx] = item;
+				else existing.unshift(item);
+				mergedCount++;
+			}
+			saveAllChalans(existing);
+			renderAdminTable();
+			showToast("Imported " + mergedCount + " chalan record(s).");
+		} catch (err) {
+			showClassicDialog("Failed to parse JSON file.");
+		}
+		evt.target.value = "";
+	};
+	reader.readAsText(file);
+}
+
+/**
+ * ============================================================================
+ * 10. CUSTOM CLASSIC ALERT / CONFIRM DIALOGS & TOAST HELPER
+ * ============================================================================
+ */
+function showClassicDialog(message) {
+	dialogCallback = null;
+	document.getElementById("classicAlertTitle").textContent = "Message from webpage";
+	document.getElementById("classicAlertMessage").textContent = message;
+	document.getElementById("classicAlertCancelBtn").style.display = "none";
+	document.getElementById("classicAlertOverlay").classList.add("is-open");
+	setTimeout(function() { document.getElementById("classicAlertOkBtn").focus(); }, 10);
+}
+
+function showClassicConfirm(message, onDone) {
+	dialogCallback = onDone;
+	document.getElementById("classicAlertTitle").textContent = "Confirm Action";
+	document.getElementById("classicAlertMessage").textContent = message;
+	document.getElementById("classicAlertCancelBtn").style.display = "inline-block";
+	document.getElementById("classicAlertOverlay").classList.add("is-open");
+	setTimeout(function() { document.getElementById("classicAlertOkBtn").focus(); }, 10);
+}
+
+function closeClassicDialog(result) {
+	document.getElementById("classicAlertOverlay").classList.remove("is-open");
+	if (typeof dialogCallback === "function") {
+		var cb = dialogCallback;
+		dialogCallback = null;
+		cb(!!result);
+	}
+}
+
+var toastTimer = null;
+function showToast(msg) {
+	var toast = document.getElementById("adminToast");
+	if (!toast) return;
+	toast.textContent = msg;
+	toast.classList.add("show");
+	clearTimeout(toastTimer);
+	toastTimer = setTimeout(function() {
+		toast.classList.remove("show");
+	}, 2600);
+}
+
+/**
+ * ============================================================================
+ * 11. INITIALIZATION ON WINDOW LOAD
+ * ============================================================================
+ */
+window.onload = function() {
+	loadAllChalans();
+	listBankBranch();
+	initCalendarYears();
+
+	var headerImg = document.getElementById("headerBannerImg");
+	if (headerImg && headerImg.complete && headerImg.naturalWidth === 0) {
+		showHeaderFallback();
+	}
+
+	var initialRoute = parseCurrentRoute();
+	renderRoute(initialRoute.view, initialRoute.challanNo);
+};
+</script>
+</body>
+</html>
